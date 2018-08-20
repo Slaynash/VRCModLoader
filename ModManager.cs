@@ -26,7 +26,14 @@ namespace VRCModLoader
             {
                 if(_ModControllers == null)
                 {
-                    LoadMods();
+                    try
+                    {
+                        LoadMods();
+                    }
+                    catch(Exception e)
+                    {
+                        VRCModLogger.Log("An error occured while loading mods: " + e);
+                    }
                 }
                 return _ModControllers;
             }
@@ -56,7 +63,10 @@ namespace VRCModLoader
 
         private static void LoadMods()
         {
+            string tmpmodDirectory = Path.Combine(Environment.CurrentDirectory, "Mods_tmp");
             string modDirectory = Path.Combine(Environment.CurrentDirectory, "Mods");
+
+            if (Directory.Exists(tmpmodDirectory)) Directory.Delete(tmpmodDirectory, true); // delete the temp directory if existing
 
             // Process.GetCurrentProcess().MainModule crashes the game and Assembly.GetEntryAssembly() is NULL,
             // so we need to resort to P/Invoke
@@ -66,22 +76,25 @@ namespace VRCModLoader
             _ModControllers = new List<VRCModController>();
 
             if (!Directory.Exists(modDirectory)) return;
-            
+            Directory.CreateDirectory(tmpmodDirectory);
+
             String[] files = Directory.GetFiles(modDirectory, "*.dll");
             foreach (var s in files)
             {
-                LoadModsFromFile(Path.Combine(modDirectory, s), exeName);
+                string newPath = tmpmodDirectory + s.Substring(modDirectory.Length);
+                VRCModLogger.Log("Copying " + s + " to " + newPath);
+                File.Copy(s, newPath);
+                LoadModsFromFile(newPath, exeName);
             }
             
 
             // DEBUG
             VRCModLogger.Log("Running on Unity " +UnityEngine.Application.unityVersion);
             VRCModLogger.Log("-----------------------------");
-            VRCModLogger.Log("Loading mods from " + modDirectory + " and found " + _Mods.Count);
+            VRCModLogger.Log("Loading mods from " + tmpmodDirectory + " and found " + _Mods.Count);
             VRCModLogger.Log("-----------------------------");
             foreach (var mod in _Mods)
             {
-
                 VRCModLogger.Log(" " + mod.Name + " (" + mod.Version + ") by " + mod.Author + (mod.DownloadLink != null ? " (" + mod.DownloadLink + ")" : ""));
             }
             VRCModLogger.Log("-----------------------------");
