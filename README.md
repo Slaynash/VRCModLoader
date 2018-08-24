@@ -22,6 +22,8 @@ How to create a mod
 To create a mod, you will need to create a new C# library, and reference the VRCModLoader.dll file.<br>
 A basic mod main class is made like this:
 ```csharp
+using VRCModLoader;
+
 //VRCModInfo(name, version, authorname [, downloadurl])
 [VRCModInfo("TestMod", "1.0", "Slaynash")]
 public class TestMod : VRCMod
