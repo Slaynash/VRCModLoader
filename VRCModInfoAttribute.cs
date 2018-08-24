@@ -28,7 +28,7 @@ namespace VRCModLoader
         /// </summary>
         public string DownloadLink { get; }
 
-        public VRCModInfoAttribute(string name, string version, string author, string modid = null, string downloadLink = null)
+        public VRCModInfoAttribute(string name, string version, string author, string downloadLink = null)
         {
             Name = name;
             Version = version;
