@@ -158,7 +158,7 @@ namespace VRCModLoader
                             string args = "";
                             foreach (string arg in Environment.GetCommandLineArgs())
                             {
-                                args = args + " ";
+                                args = args + arg + " ";
                             }
 
                             Thread t = new Thread(() =>
