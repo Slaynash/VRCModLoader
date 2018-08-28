@@ -7,8 +7,7 @@ Before install:
 - **Tupper (from VRChat Team) said that any modification of the game can lead to a ban, as with this mod**
 - You need to know that this mod has not been validated by the VRChat team, but they don't seems to care if someone use it
 
-To install this mod, you will need to install [VRCModLoader](https://github.com/Slaynash/VRCModLoader).<br>
-Currently this mod is automatically installed during the setup of VRCModLoader to your "Mods" folder in your game directory.
+You can install it by downloading the installer on [the VRCTools website](https://vrchat.survival-machines.fr/) and running it using Java
 
 You can also install it manually by putting [this UnityEngine.dll] and the built VRCModLoader.dll files to the folder `<VRChat_Install_Folder>/VRChat_Data/Managed/`.
 
