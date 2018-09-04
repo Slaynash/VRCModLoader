@@ -8,6 +8,7 @@ namespace VRCModLoader
     /// <summary>
     /// Allows to get and set preferences for your mod. 
     /// </summary>
+    [Obsolete("Please use VRCTools.ModPrefs instead")]
     public static class ModPrefs
     {
         private static IniFile _instance;
@@ -38,7 +39,7 @@ namespace VRCModLoader
         public static string GetString(string section, string name, string defaultValue = "", bool autoSave = false)
         {
             string value = Instance.IniReadValue(section, name);
-            if (value != "")
+            if (value != null && value != "")
                 return value;
             else if (autoSave)
                 SetString(section, name, defaultValue);

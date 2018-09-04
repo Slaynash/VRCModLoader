@@ -9,7 +9,7 @@ Before install:
 
 You can install it by downloading the installer on [the VRCTools website](https://vrchat.survival-machines.fr/) and running it using Java
 
-You can also install it manually by putting [this UnityEngine.dll] and the built VRCModLoader.dll files to the folder `<VRChat_Install_Folder>/VRChat_Data/Managed/`.
+You can also install it manually by putting [this UnityEngine.dll](https://download2.survival-machines.fr/vrcmodloader/UnityEngine.dll) and the built VRCModLoader.dll files to the folder `<VRChat_Install_Folder>/VRChat_Data/Managed/`.
 
 How does it works
 ---

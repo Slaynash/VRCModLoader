@@ -55,7 +55,7 @@ namespace VRCModLoader
                 WWW hashCheckWWW = new WWW("https://vrchat.survival-machines.fr/vrcmod/VRCToolsHashCheck.php?localhash=" + fileHash);
                 while (!hashCheckWWW.isDone) ;
                 int responseCode = getResponseCode(hashCheckWWW);
-                VRCModLogger.Log("[VRCToolsUpdater] hash check webpage returned [" + responseCode + "] \"" + hashCheckWWW.text + "\"");
+                VRCModLogger.Log("[VRCToolsUpdater] hash check webpage returned [" + responseCode + " / " + hashCheckWWW.error + "] \"" + hashCheckWWW.text + "\"");
                 if (responseCode != 200) {
                     errored = true;
                     errorCode = responseCode;
