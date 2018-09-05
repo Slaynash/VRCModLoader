@@ -16,6 +16,7 @@ namespace VRCModLoader
         {
             if (Environment.CommandLine.Contains("--verbose") && !Screen.fullScreen)
             {
+                VRCModLogger.consoleEnabled = true;
                 Windows.GuiConsole.CreateConsole();
             }
             if (Environment.CommandLine.Contains("--nomodloader"))

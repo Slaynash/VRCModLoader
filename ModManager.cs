@@ -63,7 +63,7 @@ namespace VRCModLoader
 
         private static void LoadMods()
         {
-            string tmpmodDirectory = Path.Combine(Environment.CurrentDirectory, "Mods_tmp");
+            string tmpmodDirectory = Path.Combine(Path.GetTempPath(), "VRCModLoaderMods");
             string modDirectory = Path.Combine(Environment.CurrentDirectory, "Mods");
 
             if (Directory.Exists(tmpmodDirectory)) Directory.Delete(tmpmodDirectory, true); // delete the temp directory if existing
