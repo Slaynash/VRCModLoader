@@ -36,6 +36,7 @@ public class TestMod : VRCMod
     void OnUpdate() { }
     void OnFixedUpdate() { }
     void OnLateUpdate() { }
+    void OnGUI() { }
 }
 ```
 You can also reference VRCTools to use the VRCTools utils (VRCUiManagerUtils, ...) and/or use the VRCModNetwork<br>
