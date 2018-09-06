@@ -36,7 +36,7 @@ namespace VRCModLoader
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("{0}: {1}", modController.mod.Name, ex);
+                    VRCModLogger.LogError("{0}: {1}", modController.mod.Name, ex);
                 }
             }
         }
@@ -52,7 +52,7 @@ namespace VRCModLoader
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("{0}: {1}", modController.mod.Name, ex);
+                    VRCModLogger.LogError("{0}: {1}", modController.mod.Name, ex);
                 }
             }
         }
@@ -69,7 +69,7 @@ namespace VRCModLoader
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("{0}: {1}", modController.mod.Name, ex);
+                    VRCModLogger.LogError("{0}: {1}", modController.mod.Name, ex);
                 }
             }
         }
@@ -88,6 +88,10 @@ namespace VRCModLoader
         public void OnLateUpdate()
         {
             Invoke(modController => modController.OnLateUpdate());
+        }
+        public void OnGUI()
+        {
+            Invoke(modController => modController.OnGUI());
         }
     }
 }

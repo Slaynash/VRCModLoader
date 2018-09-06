@@ -63,6 +63,11 @@ namespace VRCModLoader
             if (mods != null) mods.OnFixedUpdate();
         }
 
+        void OnGUI()
+        {
+            if (mods != null) mods.OnGUI();
+        }
+
         void OnDestroy()
         {
             VRCModLogger.Log("[VRCMod] [ModComponent] Component destroyed");
