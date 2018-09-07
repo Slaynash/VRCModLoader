@@ -42,7 +42,18 @@ public class TestMod : VRCMod
 You can also reference VRCTools to use the VRCTools utils (VRCUiManagerUtils, ...) and/or use the VRCModNetwork<br>
 (Please ask Slaynash on the VRCTools discord to register your packets first or they will be refused by the server)
 
-Disclaimer:
+Launch Options
+---
+- `--no-vr`: Start the game without VR (game command)
+- `--verbose`: Enable the debug console
+- `--vrctools.noupdate`: Disable the VRCTools download/update on game start
+- `--vrctools.forceupdate`: Force the update of VRCTools on game start
+
+Tutorials and helps
+---
+Unofficial VRChat API Documentation: [http://vrchatapi.github.io/](http://vrchatapi.github.io/)
+
+Disclaimer
 ---
 'I' stand for Hugo Flores (Slaynash).
 

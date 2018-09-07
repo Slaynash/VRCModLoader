@@ -156,9 +156,11 @@ namespace VRCModLoader
                             yield return ShowPopup("VRCTools Updater", "Restarting game");
                             VRCModLogger.Log("[VRCToolsUpdater] Rebooting game");
                             string args = "";
+                            bool first = true;
                             foreach (string arg in Environment.GetCommandLineArgs())
                             {
-                                args = args + arg + " ";
+                                if (first) first = false;
+                                else args = args + arg + " ";
                             }
 
                             Thread t = new Thread(() =>
