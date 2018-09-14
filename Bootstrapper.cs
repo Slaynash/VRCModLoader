@@ -14,7 +14,7 @@ namespace VRCModLoader
         
         void Awake()
         {
-            if (Environment.CommandLine.Contains("--verbose") && !Screen.fullScreen)
+            if (Environment.CommandLine.Contains("--verbose") || ModPrefs.GetBool("vrctools", "enabledebugconsole", false))
             {
                 VRCModLogger.consoleEnabled = true;
                 Windows.GuiConsole.CreateConsole();
