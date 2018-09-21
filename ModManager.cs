@@ -111,7 +111,7 @@ namespace VRCModLoader
             {
                 Assembly assembly = Assembly.LoadFrom(file);
 
-                foreach (Type t in assembly.GetTypes())
+                foreach (Type t in assembly.GetLoadableTypes())
                 {
                     if (t.IsSubclassOf(typeof(VRCMod)))
                     {
@@ -131,7 +131,7 @@ namespace VRCModLoader
                         }
                         catch (Exception e)
                         {
-                            VRCModLogger.Log("[WARN] Could not load mod " + t.FullName + " in " + Path.GetFileName(file) + "! " + e);
+                            VRCModLogger.Log("[WARN] [ModManager] Could not load mod " + t.FullName + " in " + Path.GetFileName(file) + "! " + e);
                         }
                     }
                 }
@@ -139,7 +139,21 @@ namespace VRCModLoader
             }
             catch (Exception e)
             {
-                VRCModLogger.Log("[ERROR] Could not load " + Path.GetFileName(file) + "! " + e);
+                VRCModLogger.LogError("[ModManager] Could not load " + Path.GetFileName(file) + "! " + e);
+            }
+        }
+
+        public static IEnumerable<Type> GetLoadableTypes(this Assembly assembly)
+        {
+            if (assembly == null) throw new ArgumentNullException(nameof(assembly));
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException e)
+            {
+                VRCModLogger.LogError("[ModManager] An error occured while getting types from assembly " + assembly.GetName().Name + ". Returning types from error.\n" + e);
+                return e.Types.Where(t => t != null);
             }
         }
 

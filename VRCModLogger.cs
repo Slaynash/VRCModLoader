@@ -9,7 +9,7 @@ namespace VRCModLoader
 
         public static void Log(string s)
         {
-            if(consoleEnabled) Console.WriteLine("[VRCMod] " + s);
+            if(consoleEnabled) Console.WriteLine("[" + DateTime.Now.ToString("yyyy.MM.dd HH:mm:ss.fff") + "] [VRCMod] " + s);
             Debug.Log("[VRCMod] " + s);
         }
 
