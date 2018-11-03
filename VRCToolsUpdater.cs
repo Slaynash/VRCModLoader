@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using VRC.Core;
 
@@ -104,7 +105,7 @@ namespace VRCModLoader
                 if (GameObject.Find("UserInterface") == null)
                 {
                     VRCModLogger.Log("[VRCToolsUpdater] Loading additive scene \"ui\"");
-                    AssetManagement.LoadLevelAdditive("ui");
+                    SceneManager.LoadScene("ui", LoadSceneMode.Single);
                 }
 
                 if (goForUpdate)
