@@ -18,7 +18,7 @@ On start, it will first install/update the [VRCTools mod](https://github.com/Sla
 
 How to create a mod
 ---
-To create a mod, you will need to create a new C# library, and reference the VRCModLoader.dll file.<br>
+To create a mod, you will need to create a new C# library, and reference the VRCModLoader.dll, UnityEngine.dll and UnityEngine.CoreModule.dll files. (you may also need more other UnityEngine.\*.dll files)<br>
 A basic mod main class is made like this:
 ```csharp
 using VRCModLoader;

@@ -39,7 +39,6 @@ namespace VRCModLoader
             }
         }
 
-
         public static IEnumerable<VRCMod> Mods
         {
             get
@@ -86,7 +85,7 @@ namespace VRCModLoader
                 File.Copy(s, newPath);
                 LoadModsFromFile(newPath, exeName);
             }
-            
+
 
             // DEBUG
             VRCModLogger.Log("Running on Unity " +UnityEngine.Application.unityVersion);
