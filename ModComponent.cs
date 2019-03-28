@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using UnityEngine;
 
 namespace VRCModLoader
 {
-    internal class ModComponent : MonoBehaviour
+    public class ModComponent : MonoBehaviour
     {
         private CompositeModCaller mods;
         private bool freshlyLoaded = false;
@@ -16,8 +17,20 @@ namespace VRCModLoader
 
         public static ModComponent Create()
         {
-            VRCModLogger.Log("[ModComponent] Creating component");
-            return new GameObject("IPA_ModManager").AddComponent<ModComponent>();
+            VRCModLogger.Log("[ModComponent] Loading VRLoader.dll");
+            LoadVRLoader();
+            VRCModLogger.Log("[ModComponent] VRLoader.dll loaded");
+
+            try
+            {
+                VRCModLogger.Log("[ModComponent] Creating component");
+                return new GameObject("IPA_ModManager").AddComponent<ModComponent>();
+            }
+            catch(Exception e)
+            {
+                VRCModLogger.LogError("[ModComponent] Error while creating instance: " + e);
+                return null;
+            }
         }
 
         void Awake()
@@ -34,6 +47,18 @@ namespace VRCModLoader
             {
                 mods = new CompositeModCaller(ModManager.ModControllers);
                 mods.OnApplicationStart();
+            }
+        }
+
+        private static void LoadVRLoader()
+        {
+            try
+            {
+                Assembly.Load(Properties.Resources.VRLoader);
+            }
+            catch (Exception e)
+            {
+                VRCModLogger.LogError("[ModComponent] Error while loading VRLoader.dll: " + e);
             }
         }
 

@@ -9,6 +9,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using UnityEngine;
+using VRLoader.Attributes;
+using VRLoader.Modules;
 
 namespace VRCModLoader
 {
@@ -16,6 +18,8 @@ namespace VRCModLoader
     {
         private static List<VRCMod> _Mods = null;
         private static List<VRCModController> _ModControllers = null;
+        private static List<VRModule> _Modules = null;
+        internal static ModuleManager moduleManager;
 
         /// <summary>
         /// Gets the list of loaded mods and loads them if necessary.
@@ -39,7 +43,7 @@ namespace VRCModLoader
             }
         }
 
-        public static IEnumerable<VRCMod> Mods
+        public static List<VRCMod> Mods
         {
             get
             {
@@ -50,7 +54,19 @@ namespace VRCModLoader
                 return _Mods;
             }
         }
-
+        
+        public static List<VRModule> Modules
+        {
+            get
+            {
+                if (_Modules == null)
+                {
+                    LoadMods();
+                }
+                return _Modules;
+            }
+        }
+        
 
         public static Coroutine StartCoroutine(IEnumerator routine)
         {
@@ -73,11 +89,16 @@ namespace VRCModLoader
             VRCModLogger.Log(exeName);
             _Mods = new List<VRCMod>();
             _ModControllers = new List<VRCModController>();
-
+            _Modules = new List<VRModule>();
+            if (moduleManager == null)
+            {
+                moduleManager = new ModuleManager();
+                ModComponent.Instance.gameObject.AddComponent<VRLoader.VRLoader>();
+            }
             if (!Directory.Exists(modDirectory)) return;
             Directory.CreateDirectory(tmpmodDirectory);
 
-            String[] files = Directory.GetFiles(modDirectory, "*.dll");
+            string[] files = Directory.GetFiles(modDirectory, "*.dll");
             foreach (var s in files)
             {
                 string newPath = tmpmodDirectory + s.Substring(modDirectory.Length);
@@ -90,18 +111,23 @@ namespace VRCModLoader
             // DEBUG
             VRCModLogger.Log("Running on Unity " +UnityEngine.Application.unityVersion);
             VRCModLogger.Log("-----------------------------");
-            VRCModLogger.Log("Loading mods from " + tmpmodDirectory + " and found " + _Mods.Count);
+            VRCModLogger.Log("Loading mods from " + tmpmodDirectory + " and found " + _Mods.Count + " mods and " + Modules.Count + " modules.");
             VRCModLogger.Log("-----------------------------");
             foreach (var mod in _Mods)
             {
                 VRCModLogger.Log(" " + mod.Name + " (" + mod.Version + ") by " + mod.Author + (mod.DownloadLink != null ? " (" + mod.DownloadLink + ")" : ""));
             }
+            
+            foreach (var mod in _Modules)
+            {
+                VRCModLogger.Log(" " + mod.Name + " (" + mod.Version + ") by " + mod.Author);
+            }
+            
             VRCModLogger.Log("-----------------------------");
         }
 
         private static void LoadModsFromFile(string file, string exeName)
         {
-            List<VRCMod> mods = new List<VRCMod>();
 
             if (!File.Exists(file) || !file.EndsWith(".dll", true, null))
                 return;
@@ -109,9 +135,10 @@ namespace VRCModLoader
             try
             {
                 Assembly assembly = Assembly.LoadFrom(file);
-
+                VRCModLogger.Log("File: " + file);
                 foreach (Type t in assembly.GetLoadableTypes())
                 {
+                    //VRCModLogger.Log("Type: " + t.FullName + " - (VRCMod: " + t.IsSubclassOf(typeof(VRCMod)) + " - VRModule: " + t.IsSubclassOf(typeof(VRModule)) + ")");
                     if (t.IsSubclassOf(typeof(VRCMod)))
                     {
                         try
@@ -131,6 +158,25 @@ namespace VRCModLoader
                         catch (Exception e)
                         {
                             VRCModLogger.Log("[WARN] [ModManager] Could not load mod " + t.FullName + " in " + Path.GetFileName(file) + "! " + e);
+                        }
+                    }
+                    
+                    if (t.IsSubclassOf(typeof(VRModule)))
+                    {
+                        try
+                        {
+                            ModuleInfoAttribute moduleInfo;
+                            if ((moduleInfo = (t.GetCustomAttributes(typeof(ModuleInfoAttribute), true).FirstOrDefault<object>() as ModuleInfoAttribute)) != null)
+                            {
+                                VRModule vrmodule = ModComponent.Instance.gameObject.AddComponent(t) as VRModule;
+                                _Modules.Add(vrmodule);
+                                vrmodule.Initialize(moduleInfo, moduleManager);
+                                VRCModLogger.Log("[VRLoader] {0} loaded.", vrmodule);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            VRCModLogger.Log("[WARN] [ModManager] Could not load module " + t.FullName + " in " + Path.GetFileName(file) + "! " + e);
                         }
                     }
                 }
