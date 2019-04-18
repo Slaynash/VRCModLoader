@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -103,7 +103,17 @@ namespace VRCModLoader
             {
                 string newPath = tmpmodDirectory + s.Substring(modDirectory.Length);
                 VRCModLogger.Log("Copying " + s + " to " + newPath);
-                File.Copy(s, newPath);
+                try {
+                    File.Copy(s, newPath);
+                } catch (System.UnauthorizedAccessException ex) {
+                    System.Threading.Mutex m = new System.Threading.Mutex(false, "VRChat");
+                    if (m.WaitOne(1, false) == true)
+                    {
+                        VRCModLogger.LogError(ex.ToString());
+                        return;
+                    }
+                    VRCModLogger.Log($"Unable to copy \"{s}\" to temporary directory because the game is already running, trying to continue...");
+                }
                 LoadModsFromFile(newPath, exeName);
             }
 
