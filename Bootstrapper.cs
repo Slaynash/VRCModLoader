@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using Windows;
 
 namespace VRCModLoader
 {
@@ -14,10 +15,13 @@ namespace VRCModLoader
         
         void Awake()
         {
+            VRCModLogger.Init();
+            VRCModLogger.Log("[VRCModLoader] Logger Initialised");
             if (Environment.CommandLine.Contains("--verbose") || ModPrefs.GetBool("vrctools", "enabledebugconsole", false))
             {
                 VRCModLogger.consoleEnabled = true;
-                Windows.GuiConsole.CreateConsole();
+                GuiConsole.CreateConsole();
+                VRCModLogger.Log("[VRCModLoader] Bootstrapper created");
             }
             if (Environment.CommandLine.Contains("--nomodloader"))
             {

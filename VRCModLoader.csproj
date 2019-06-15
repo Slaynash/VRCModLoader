@@ -56,9 +56,6 @@
     <Reference Include="Blake2Sharp">
       <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Blake2Sharp.dll</HintPath>
     </Reference>
-    <Reference Include="Copie de Assembly-CSharp">
-      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Copie de Assembly-CSharp.dll</HintPath>
-    </Reference>
     <Reference Include="DotZLib">
       <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\DotZLib.dll</HintPath>
     </Reference>
@@ -96,7 +93,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
+    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\UnityEngine.UI.dll</HintPath>
@@ -116,11 +116,7 @@
     <Compile Include="ConsoleWindow.cs" />
     <Compile Include="IniFile.cs" />
     <Compile Include="Injector.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs" />
     <Compile Include="VRCMod.cs" />
     <Compile Include="ModPrefs.cs" />
     <Compile Include="ModComponent.cs" />
@@ -132,12 +128,8 @@
     <Compile Include="VRCModLogger.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="Resources\VRLoader.dll" />
   </ItemGroup>

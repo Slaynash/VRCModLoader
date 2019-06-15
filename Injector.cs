@@ -19,7 +19,14 @@ namespace VRCModLoader
 
         private static void Bootstrapper_Destroyed()
         {
-            ModComponent.Create();
+            try
+            {
+                ModComponent.Create();
+            }
+            catch(Exception e)
+            {
+                VRCModLogger.LogError(e.ToString());
+            }
         }
     }
 }
