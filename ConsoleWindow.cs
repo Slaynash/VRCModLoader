@@ -30,7 +30,6 @@ namespace Windows
             Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });
             Console.SetIn(new StreamReader(Console.OpenStandardInput()));
             Console.Clear();
-            Console.Title = "VRLoader by Harekuin";
             ShowConsole();
         }
     }
