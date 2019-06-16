@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using UnityEngine;
 
@@ -37,32 +37,38 @@ namespace VRCModLoader
             log.Close();
         }
 
+        internal static string GetTimestamp() { return DateTime.Now.ToString("HH:mm:ss.fff"); }
+
         public static void Log(string s)
         {
-            if(consoleEnabled) Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss.fff") + "] [VRCMod] " + s);
             Debug.Log("[VRCMod] " + s);
-            if(log != null) log.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss.fff") + "] " + s);
+            if (!consoleEnabled || log == null) return;
+            var timestamp = GetTimestamp();
+            if(consoleEnabled) Console.WriteLine("[" + timestamp + "] [VRCMod] " + s);
+            if(log != null) log.WriteLine("[" + timestamp + "] " + s);
         }
 
         public static void Log(string s, params object[] args)
         {
             if (consoleEnabled) Console.WriteLine("[VRCMod] " + s, args);
-            Debug.LogFormat("[" + DateTime.Now.ToString("HH:mm:ss.fff") + "] [VRCMod] " + string.Format(s, args));
-            if (log != null) log.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss.fff") + "] " + string.Format(s, args));
+            var timestamp = GetTimestamp();
+            var formatted = string.Format(s, args);
+            Debug.LogFormat("[" + timestamp + "] [VRCMod] " + formatted);
+            if (log != null) log.WriteLine("[" + timestamp + "] " + formatted);
         }
 
         public static void LogError(string s)
         {
             if (consoleEnabled) Console.WriteLine("[VRCMod] [Error] " + s);
             Debug.Log("[VRCMod] [Error] " + s);
-            if (log != null) log.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss.fff") + "] [Error] " + s);
+            if (log != null) log.WriteLine("[" + GetTimestamp() + "] [Error] " + s);
         }
 
         public static void LogError(string s, params object[] args)
         {
             if (consoleEnabled) Console.WriteLine("[VRCMod] [Error] " + s, args);
             Debug.LogFormat("[VRCMod] [Error] " + s, args);
-            if (log != null) log.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss.fff") + "] [Error] " + string.Format(s, args));
+            if (log != null) log.WriteLine("[" + GetTimestamp() + "] [Error] " + string.Format(s, args));
         }
     }
 }
