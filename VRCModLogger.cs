@@ -15,7 +15,7 @@ namespace VRCModLoader
             DirectoryInfo logDirInfo = null;
             FileInfo logFileInfo;
 
-            string logFilePath = Path.Combine(Environment.CurrentDirectory, "Logs");
+            string logFilePath = Path.Combine(Environment.CurrentDirectory, "Logs" + Path.DirectorySeparatorChar + "VRCModLoader");
             logFilePath = logFilePath + "/VRCModLoader_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-fff") + ".log";
             logFileInfo = new FileInfo(logFilePath);
             logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
