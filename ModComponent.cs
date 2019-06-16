@@ -113,6 +113,7 @@ namespace VRCModLoader
         void OnLevelWasLoaded(int level)
         {
             VRCModLogger.Log("[ModComponent] OnLevelWasLoaded called (" + level + ")");
+            transform.SetAsLastSibling();
             if (level == 0) StartCoroutine(VRCToolsUpdater.UpdateAndRebootIfRequired());
             if (mods != null) mods.OnLevelWasLoaded(level);
             freshlyLoaded = true;
