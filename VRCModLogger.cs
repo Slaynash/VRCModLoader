@@ -9,13 +9,20 @@ namespace VRCModLoader
         internal static bool consoleEnabled = false;
         private static StreamWriter log;
 
+        internal static string CombinePaths(params string[] paths)
+        {
+            if (paths == null) throw new ArgumentNullException("paths");
+            return paths.Aggregate(Path.Combine);
+        }
+
         internal static void Init()
         {
             FileStream fileStream = null;
             DirectoryInfo logDirInfo = null;
             FileInfo logFileInfo;
 
-            string logFilePath = Path.Combine(Environment.CurrentDirectory, "Logs" + Path.DirectorySeparatorChar + "VRCModLoader");
+            string logFilePath = CombinePaths(Application.persistentDataPath, "Logs", "VRCModLoader");
+            // string logFilePath = CombinePaths(Environment.CurrentDirectory, "Logs", "VRCModLoader");
             logFilePath = logFilePath + "/VRCModLoader_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-fff") + ".log";
             logFileInfo = new FileInfo(logFilePath);
             logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
