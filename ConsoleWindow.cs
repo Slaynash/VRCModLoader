@@ -29,7 +29,8 @@ namespace Windows
             AllocConsole();
             Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });
             Console.SetIn(new StreamReader(Console.OpenStandardInput()));
-            Console.Clear();
+            // Console.Clear(); Maybe something else wrote to Console before.
+            Console.Title = $"{Application.productName} v{Application.version} on {Enum.GetName(typeof(RuntimePlatform), Application.platform).Replace("Player", "")} [VRCModloader]";
             ShowConsole();
         }
     }
