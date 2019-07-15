@@ -9,6 +9,9 @@ namespace VRCModLoader
         private static bool injected = false;
         public static void Inject()
         {
+            if (Environment.CommandLine.Contains("--no-mods"))
+                return;
+
             if (!injected)
             {
                 injected = true;
