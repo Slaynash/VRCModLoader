@@ -78,6 +78,7 @@ namespace VRCModLoader
 
         private static void LoadMods()
         {
+            VRCModLogger.Log("Looking for mods");
             string tmpmodDirectory = Path.Combine(Path.GetTempPath(), "VRCModLoaderMods");
             string modDirectory = Path.Combine(Environment.CurrentDirectory, "Mods");
 

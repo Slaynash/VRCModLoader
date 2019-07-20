@@ -18,7 +18,7 @@ namespace VRCModLoader
     {
         private static bool needUpdate = false;
         private static Image downloadProgressFillImage = null;
-        private static string vrctoolsPath = null;
+        private static string vrctoolsPath;
 
         private static bool errored = false;
         private static int errorCode = -1;
@@ -28,9 +28,9 @@ namespace VRCModLoader
 
         internal static bool CheckForVRCToolsUpdate()
         {
-            vrctoolsPath = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))) + "\\Mods\\VRCTools.dll";
-            Directory.CreateDirectory(Path.GetDirectoryName(vrctoolsPath));
-            VRCModLogger.Log("[VRCToolsUpdater] Supposed VRCToolsPath path: " + vrctoolsPath);
+            string modsPath = Path.Combine(Environment.CurrentDirectory, "Mods");
+            Directory.CreateDirectory(modsPath);
+            VRCModLogger.Log("[VRCToolsUpdater] Supposed mods path: " + modsPath);
 
             foreach (string arg in Environment.GetCommandLineArgs())
             {
@@ -38,11 +38,16 @@ namespace VRCModLoader
                 if (arg.ToLower().Equals("--vrctools.noupdate")) return false;
             }
 
+            VRCModLogger.Log("[VRCToolsUpdater] Looking for VRCTools");
+            vrctoolsPath = Directory.GetFiles(modsPath).FirstOrDefault(s => Path.GetFileName(s).ToLower().StartsWith("vrctools.") && s.ToLower().EndsWith(".dll"));
+            VRCModLogger.Log("[VRCToolsUpdater] vrctoolsPath = " + vrctoolsPath);
+
             //hash check
             string fileHash = "";
 
-            if (File.Exists(vrctoolsPath))
+            if (vrctoolsPath != null)
             {
+                VRCModLogger.Log("[VRCToolsUpdater] VRCTools found. path: " + vrctoolsPath);
                 using (var md5 = MD5.Create())
                 {
                     using (var stream = File.OpenRead(vrctoolsPath))
@@ -71,6 +76,7 @@ namespace VRCModLoader
             else
             {
                 VRCModLogger.Log("[VRCToolsUpdater] Download of VRCTools required");
+                vrctoolsPath = Path.Combine(modsPath , "VRCTools.dll");
                 return true;
             }
 
@@ -167,7 +173,7 @@ namespace VRCModLoader
                             Thread t = new Thread(() =>
                             {
                                 Thread.Sleep(1000);
-                                System.Diagnostics.Process.Start(Path.GetDirectoryName(Path.GetDirectoryName(vrctoolsPath)) + "\\VRChat.exe", args);
+                                System.Diagnostics.Process.Start(Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(vrctoolsPath)), "VRChat.exe"), args);
                                 Thread.Sleep(100);
                             });
                             t.Start();
