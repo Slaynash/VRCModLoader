@@ -21,6 +21,9 @@ namespace VRCModLoader
             LoadVRLoader();
             VRCModLogger.Log("[ModComponent] VRLoader.dll loaded");
 
+            if (!Bootstrapper.loadmods)
+                return null;
+
             try
             {
                 VRCModLogger.Log("[ModComponent] Creating component");

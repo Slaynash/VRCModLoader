@@ -7,14 +7,12 @@ Before install:
 - **Tupper (from VRChat Team) said that any modification of the game can lead to a ban, as with this mod**
 - You need to know that this mod has not been validated by the VRChat team, but they don't seems to care if someone use it
 
-You can install it by downloading the installer on [the VRCTools website](https://vrchat.survival-machines.fr/) and running it using Java
-
-You can also install it manually by putting [this UnityEngine.dll](https://download2.survival-machines.fr/vrcmodloader/UnityEngine.dll) and the built VRCModLoader.dll files to the folder `<VRChat_Install_Folder>/VRChat_Data/Managed/`.
+You can install it using the mod installer available on [the VRCTools website](https://vrchat.survival-machines.fr/)
 
 How does it works
 ---
 This file is loaded by the modified UnityEngine.dll assembly.<br>
-On start, it will first install/update the [VRCTools mod](https://github.com/Slaynash/VRCTools) (It's a required mod for having all VRCModLoader features), copy all files located in `<VRChat_Install_Folder>/Mods` to `<VRChat_Install_Folder>/Mods_tmp`, and then load add the mods located in the directory `<VRChat_Install_Folder>/Mods_tmp`.
+On start, it will first install/update the [VRCTools mod](https://github.com/Slaynash/VRCTools) (It's a required mod for having all VRCModLoader features), copy all files located in `<VRChat_Install_Folder>/Mods` to a temporary folder, and then load all of them.
 
 How to create a mod
 ---
@@ -48,10 +46,12 @@ Launch Options
 - `--verbose`: Enable the debug console
 - `--vrctools.noupdate`: Disable the VRCTools download/update on game start
 - `--vrctools.forceupdate`: Force the update of VRCTools on game start
+- `--nomodloader`: Disable the modloader
 
 Tutorials and helps
 ---
 Unofficial VRChat API Documentation: [http://vrchatapi.github.io/](http://vrchatapi.github.io/)
+... More coming later ...
 
 Disclaimer
 ---
@@ -63,4 +63,4 @@ I am not responsible of any legal prejudice against VRChat, the VRChat team, VRC
 
 Want more infos or some help ?
 ---
-You can [join the VRCTools discord server](https://discord.gg/E6tSYff) if you need some help, want to know when an update is released, the status of the known bugs, the upcoming features, or simply talk with others !
+You can [join the VRCTools discord server](https://discord.gg/rCqKSvR) if you need some help, want to know when an update is released, the status of the known bugs, the upcoming features, or simply talk with others !

@@ -9,7 +9,7 @@ namespace VRCModLoader
 {
     class Bootstrapper : MonoBehaviour
     {
-        private bool loadmods = true;
+        internal static bool loadmods = true;
 
         public event Action Destroyed = delegate {};
         
@@ -35,7 +35,7 @@ namespace VRCModLoader
         }
         void OnDestroy()
         {
-            if(loadmods) Destroyed();
+            Destroyed();
         }
     }
 }
