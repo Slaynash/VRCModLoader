@@ -173,12 +173,12 @@ namespace VRCModLoader
                             Thread t = new Thread(() =>
                             {
                                 Thread.Sleep(1000);
-                                System.Diagnostics.Process.Start(Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(vrctoolsPath)), "VRChat.exe"), args);
+                                System.Diagnostics.Process.Start(Path.Combine(Environment.CurrentDirectory, "VRChat.exe"), args);
                                 Thread.Sleep(100);
                             });
                             t.Start();
 
-                            Application.Quit();
+                            System.Diagnostics.Process.GetCurrentProcess().Kill();
                         }
                         else
                         {
