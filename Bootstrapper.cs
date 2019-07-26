@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+using System;
 using Windows;
+using UnityEngine;
 
 namespace VRCModLoader
 {
@@ -26,6 +23,11 @@ namespace VRCModLoader
             if (Environment.CommandLine.Contains("--nomodloader"))
             {
                 loadmods = false;
+            }
+            if (!Environment.CommandLine.Contains("--notitle"))
+            {
+                var windowPtr = GuiConsole.FindWindow(null, "VRChat");
+                GuiConsole.SetWindowText(windowPtr, GuiConsole.Title);
             }
         }
 
