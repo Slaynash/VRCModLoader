@@ -216,7 +216,7 @@ namespace VRCModLoader
             }
             catch (Exception e)
             {
-                VRCModLogger.LogError("[ModManager] Could not load " + ssembly.GetName() + "! " + e);
+                VRCModLogger.LogError("[ModManager] Could not load " + assembly.GetName() + "! " + e);
             }
         }
 
