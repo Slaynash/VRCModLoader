@@ -16,10 +16,12 @@ namespace VRCModLoader
 {
     public static class ModManager
     {
+        internal static ModuleManager moduleManager;
+
         private static List<VRCMod> _Mods = null;
         private static List<VRCModController> _ModControllers = null;
         private static List<VRModule> _Modules = null;
-        internal static ModuleManager moduleManager;
+        private static List<Assembly> loadedAssemblies = new List<Assembly>();
 
         /// <summary>
         /// Gets the list of loaded mods and loads them if necessary.
@@ -100,7 +102,7 @@ namespace VRCModLoader
             Directory.CreateDirectory(tmpmodDirectory);
 
             string[] files = Directory.GetFiles(modDirectory, "*.dll");
-            foreach (var s in files)
+            foreach (string s in files)
             {
                 string newPath = tmpmodDirectory + s.Substring(modDirectory.Length);
                 VRCModLogger.Log("Copying " + s + " to " + newPath);
@@ -115,12 +117,35 @@ namespace VRCModLoader
                     }
                     VRCModLogger.Log($"Unable to copy \"{s}\" to temporary directory because the game is already running, trying to continue...");
                 }
-                LoadModsFromFile(newPath, exeName);
+            }
+            files = Directory.GetFiles(tmpmodDirectory, "*.dll");
+
+            foreach (string s in files)
+            {
+                if (!File.Exists(s) || !s.EndsWith(".dll", true, null))
+                    return;
+
+                VRCModLogger.Log("Loading " + s);
+                try
+                {
+                    Assembly a = Assembly.LoadFile(s);
+                    loadedAssemblies.Add(a);
+                }
+                catch (Exception e)
+                {
+                    VRCModLogger.LogError("Unable to load assembly " + s + ":\n" + e);
+                }
+            }
+
+            foreach (Assembly a in loadedAssemblies)
+            {
+                VRCModLogger.Log("Loading mods from " + a.GetName());
+                LoadModsFromAssembly(a);
             }
 
 
             // DEBUG
-            VRCModLogger.Log("Running on Unity " +UnityEngine.Application.unityVersion);
+            VRCModLogger.Log("Running on Unity " + UnityEngine.Application.unityVersion);
             VRCModLogger.Log("-----------------------------");
             VRCModLogger.Log("Loading mods from " + tmpmodDirectory + " and found " + _Mods.Count + " mods and " + Modules.Count + " modules.");
             VRCModLogger.Log("-----------------------------");
@@ -128,7 +153,9 @@ namespace VRCModLoader
             {
                 VRCModLogger.Log(" " + mod.Name + " (" + mod.Version + ") by " + mod.Author + (mod.DownloadLink != null ? " (" + mod.DownloadLink + ")" : ""));
             }
-            
+
+            VRCModLogger.Log("-----------------------------");
+
             foreach (var mod in _Modules)
             {
                 VRCModLogger.Log(" " + mod.Name + " (" + mod.Version + ") by " + mod.Author);
@@ -137,16 +164,10 @@ namespace VRCModLoader
             VRCModLogger.Log("-----------------------------");
         }
 
-        private static void LoadModsFromFile(string file, string exeName)
+        private static void LoadModsFromAssembly(Assembly assembly)
         {
-
-            if (!File.Exists(file) || !file.EndsWith(".dll", true, null))
-                return;
-
             try
             {
-                Assembly assembly = Assembly.LoadFrom(file);
-                VRCModLogger.Log("File: " + file);
                 foreach (Type t in assembly.GetLoadableTypes())
                 {
                     //VRCModLogger.Log("Type: " + t.FullName + " - (VRCMod: " + t.IsSubclassOf(typeof(VRCMod)) + " - VRModule: " + t.IsSubclassOf(typeof(VRModule)) + ")");
@@ -168,7 +189,7 @@ namespace VRCModLoader
                         }
                         catch (Exception e)
                         {
-                            VRCModLogger.Log("[WARN] [ModManager] Could not load mod " + t.FullName + " in " + Path.GetFileName(file) + "! " + e);
+                            VRCModLogger.Log("[WARN] [ModManager] Could not load mod " + t.FullName + " in " + assembly.GetName() + "! " + e);
                         }
                     }
                     
@@ -187,7 +208,7 @@ namespace VRCModLoader
                         }
                         catch (Exception e)
                         {
-                            VRCModLogger.Log("[WARN] [ModManager] Could not load module " + t.FullName + " in " + Path.GetFileName(file) + "! " + e);
+                            VRCModLogger.Log("[WARN] [ModManager] Could not load module " + t.FullName + " in " + assembly.GetName() + "! " + e);
                         }
                     }
                 }
@@ -195,7 +216,7 @@ namespace VRCModLoader
             }
             catch (Exception e)
             {
-                VRCModLogger.LogError("[ModManager] Could not load " + Path.GetFileName(file) + "! " + e);
+                VRCModLogger.LogError("[ModManager] Could not load " + ssembly.GetName() + "! " + e);
             }
         }
 
