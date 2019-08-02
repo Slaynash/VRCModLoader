@@ -41,8 +41,6 @@ namespace VRCModLoader
 
         public static void Log(string s)
         {
-            Debug.Log("[VRCMod] " + s);
-            if (!consoleEnabled || log == null) return;
             var timestamp = GetTimestamp();
             if(consoleEnabled) Console.WriteLine("[" + timestamp + "] [VRCMod] " + s);
             if(log != null) log.WriteLine("[" + timestamp + "] " + s);
@@ -50,25 +48,25 @@ namespace VRCModLoader
 
         public static void Log(string s, params object[] args)
         {
-            if (consoleEnabled) Console.WriteLine("[VRCMod] " + s, args);
             var timestamp = GetTimestamp();
             var formatted = string.Format(s, args);
-            Debug.LogFormat("[" + timestamp + "] [VRCMod] " + formatted);
+            if (consoleEnabled) Console.WriteLine("[" + timestamp + "] [VRCMod] " + s, args);
             if (log != null) log.WriteLine("[" + timestamp + "] " + formatted);
         }
 
         public static void LogError(string s)
         {
-            if (consoleEnabled) Console.WriteLine("[VRCMod] [Error] " + s);
-            Debug.Log("[VRCMod] [Error] " + s);
-            if (log != null) log.WriteLine("[" + GetTimestamp() + "] [Error] " + s);
+            var timestamp = GetTimestamp();
+            if (consoleEnabled) Console.WriteLine("[" + timestamp + "] [VRCMod] [Error] " + s);
+            if (log != null) log.WriteLine("[" + timestamp + "] [Error] " + s);
         }
 
         public static void LogError(string s, params object[] args)
         {
-            if (consoleEnabled) Console.WriteLine("[VRCMod] [Error] " + s, args);
-            Debug.LogFormat("[VRCMod] [Error] " + s, args);
-            if (log != null) log.WriteLine("[" + GetTimestamp() + "] [Error] " + string.Format(s, args));
+            var timestamp = GetTimestamp();
+            var formatted = string.Format(s, args);
+            if (consoleEnabled) Console.WriteLine("[" + timestamp + "] [VRCMod] [Error] " + formatted);
+            if (log != null) log.WriteLine("[" + timestamp + "] [Error] " + formatted);
         }
     }
 }
