@@ -16,8 +16,6 @@ namespace VRCModLoader
 {
     public static class ModManager
     {
-        private static Dictionary<string, string> _Names = new Dictionary<string, string>();
-        private static List<string> _Loaded = new List<string>();
         private static List<VRCMod> _Mods = null;
         private static List<VRCModController> _ModControllers = null;
         private static List<VRModule> _Modules = null;
@@ -80,9 +78,11 @@ namespace VRCModLoader
 
         private static void LoadMods()
         {
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
             VRCModLogger.Log("Looking for mods");
+            string tmpmodDirectory = Path.Combine(Path.GetTempPath(), "VRCModLoaderMods");
             string modDirectory = Path.Combine(Environment.CurrentDirectory, "Mods");
+
+            if (Directory.Exists(tmpmodDirectory)) Directory.Delete(tmpmodDirectory, true); // delete the temp directory if existing
 
             // Process.GetCurrentProcess().MainModule crashes the game and Assembly.GetEntryAssembly() is NULL,
             // so we need to resort to P/Invoke
@@ -97,18 +97,32 @@ namespace VRCModLoader
                 ModComponent.Instance.gameObject.AddComponent<VRLoader.VRLoader>();
             }
             if (!Directory.Exists(modDirectory)) return;
+            Directory.CreateDirectory(tmpmodDirectory);
 
             string[] files = Directory.GetFiles(modDirectory, "*.dll");
             foreach (var s in files)
-                LoadAssemblyNameFromFile(s);
-            foreach (var s in files)
-                LoadModsFromFile(s);
+            {
+                string newPath = tmpmodDirectory + s.Substring(modDirectory.Length);
+                VRCModLogger.Log("Copying " + s + " to " + newPath);
+                try {
+                    File.Copy(s, newPath);
+                } catch (System.UnauthorizedAccessException ex) {
+                    System.Threading.Mutex m = new System.Threading.Mutex(false, "VRChat");
+                    if (m.WaitOne(1, false) == true)
+                    {
+                        VRCModLogger.LogError(ex.ToString());
+                        return;
+                    }
+                    VRCModLogger.Log($"Unable to copy \"{s}\" to temporary directory because the game is already running, trying to continue...");
+                }
+                LoadModsFromFile(newPath, exeName);
+            }
 
 
             // DEBUG
             VRCModLogger.Log("Running on Unity " +UnityEngine.Application.unityVersion);
             VRCModLogger.Log("-----------------------------");
-            VRCModLogger.Log("Loading mods from " + modDirectory + " and found " + _Mods.Count + " mods and " + Modules.Count + " modules.");
+            VRCModLogger.Log("Loading mods from " + tmpmodDirectory + " and found " + _Mods.Count + " mods and " + Modules.Count + " modules.");
             VRCModLogger.Log("-----------------------------");
             foreach (var mod in _Mods)
             {
@@ -123,39 +137,15 @@ namespace VRCModLoader
             VRCModLogger.Log("-----------------------------");
         }
 
-        private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        private static void LoadModsFromFile(string file, string exeName)
         {
-            if (_Names.ContainsKey(args.Name))
-                return LoadModsFromFile(_Names[args.Name]);
-            return null;
-        }
 
-        private static void LoadAssemblyNameFromFile(string file)
-        {
-            if (!File.Exists(file) || !file.EndsWith(".dll", true, null) || _Loaded.Contains(file))
+            if (!File.Exists(file) || !file.EndsWith(".dll", true, null))
                 return;
 
             try
             {
-                AssemblyName name = AssemblyName.GetAssemblyName(file);
-
-                _Names.Add(name.FullName, file);
-            }
-            catch (Exception ex)
-            {
-                VRCModLogger.LogError("[ModManager] Could not get assembly name of " + Path.GetFileName(file) + "! " + ex);
-            }
-        }
-
-        private static Assembly LoadModsFromFile(string file)
-        {
-
-            if (!File.Exists(file) || !file.EndsWith(".dll", true, null) || _Loaded.Contains(file))
-                return null;
-
-            try
-            {
-                Assembly assembly = Assembly.Load(File.ReadAllBytes(file));
+                Assembly assembly = Assembly.LoadFrom(file);
                 VRCModLogger.Log("File: " + file);
                 foreach (Type t in assembly.GetLoadableTypes())
                 {
@@ -201,14 +191,12 @@ namespace VRCModLoader
                         }
                     }
                 }
-                _Loaded.Add(file);
-                return assembly;
+
             }
             catch (Exception e)
             {
                 VRCModLogger.LogError("[ModManager] Could not load " + Path.GetFileName(file) + "! " + e);
             }
-            return null;
         }
 
         public static IEnumerable<Type> GetLoadableTypes(this Assembly assembly)
