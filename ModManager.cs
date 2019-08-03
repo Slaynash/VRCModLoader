@@ -50,9 +50,7 @@ namespace VRCModLoader
             get
             {
                 if (_Mods == null)
-                {
                     LoadMods();
-                }
                 return _Mods;
             }
         }
@@ -62,9 +60,7 @@ namespace VRCModLoader
             get
             {
                 if (_Modules == null)
-                {
                     LoadMods();
-                }
                 return _Modules;
             }
         }
@@ -81,13 +77,8 @@ namespace VRCModLoader
         private static void LoadMods()
         {
             VRCModLogger.Log("Looking for mods");
-            string tmpmodDirectory = Path.Combine(Path.GetTempPath(), "VRCModLoaderMods");
             string modDirectory = Path.Combine(Environment.CurrentDirectory, "Mods");
 
-            if (Directory.Exists(tmpmodDirectory)) Directory.Delete(tmpmodDirectory, true); // delete the temp directory if existing
-
-            // Process.GetCurrentProcess().MainModule crashes the game and Assembly.GetEntryAssembly() is NULL,
-            // so we need to resort to P/Invoke
             string exeName = Path.GetFileNameWithoutExtension(AppInfo.StartupPath);
             VRCModLogger.Log(exeName);
             _Mods = new List<VRCMod>();
@@ -99,26 +90,8 @@ namespace VRCModLoader
                 ModComponent.Instance.gameObject.AddComponent<VRLoader.VRLoader>();
             }
             if (!Directory.Exists(modDirectory)) return;
-            Directory.CreateDirectory(tmpmodDirectory);
 
             string[] files = Directory.GetFiles(modDirectory, "*.dll");
-            foreach (string s in files)
-            {
-                string newPath = tmpmodDirectory + s.Substring(modDirectory.Length);
-                VRCModLogger.Log("Copying " + s + " to " + newPath);
-                try {
-                    File.Copy(s, newPath);
-                } catch (System.UnauthorizedAccessException ex) {
-                    System.Threading.Mutex m = new System.Threading.Mutex(false, "VRChat");
-                    if (m.WaitOne(1, false) == true)
-                    {
-                        VRCModLogger.LogError(ex.ToString());
-                        return;
-                    }
-                    VRCModLogger.Log($"Unable to copy \"{s}\" to temporary directory because the game is already running, trying to continue...");
-                }
-            }
-            files = Directory.GetFiles(tmpmodDirectory, "*.dll");
 
             foreach (string s in files)
             {
@@ -128,7 +101,8 @@ namespace VRCModLoader
                 VRCModLogger.Log("Loading " + s);
                 try
                 {
-                    Assembly a = Assembly.LoadFile(s);
+                    byte[] data = File.ReadAllBytes(s);
+                    Assembly a = Assembly.Load(data);
                     loadedAssemblies.Add(a);
                 }
                 catch (Exception e)
@@ -145,21 +119,17 @@ namespace VRCModLoader
 
 
             // DEBUG
-            VRCModLogger.Log("Running on Unity " + UnityEngine.Application.unityVersion);
+            VRCModLogger.Log("Running on Unity " + Application.unityVersion);
             VRCModLogger.Log("-----------------------------");
-            VRCModLogger.Log("Loading mods from " + tmpmodDirectory + " and found " + _Mods.Count + " mods and " + Modules.Count + " modules.");
+            VRCModLogger.Log("Loading mods from " + modDirectory + " and found " + _Mods.Count + " VRCMods and " + Modules.Count + " VRModules.");
             VRCModLogger.Log("-----------------------------");
             foreach (var mod in _Mods)
-            {
                 VRCModLogger.Log(" " + mod.Name + " (" + mod.Version + ") by " + mod.Author + (mod.DownloadLink != null ? " (" + mod.DownloadLink + ")" : ""));
-            }
 
             VRCModLogger.Log("-----------------------------");
 
             foreach (var mod in _Modules)
-            {
                 VRCModLogger.Log(" " + mod.Name + " (" + mod.Version + ") by " + mod.Author);
-            }
             
             VRCModLogger.Log("-----------------------------");
         }
@@ -170,7 +140,6 @@ namespace VRCModLoader
             {
                 foreach (Type t in assembly.GetLoadableTypes())
                 {
-                    //VRCModLogger.Log("Type: " + t.FullName + " - (VRCMod: " + t.IsSubclassOf(typeof(VRCMod)) + " - VRModule: " + t.IsSubclassOf(typeof(VRModule)) + ")");
                     if (t.IsSubclassOf(typeof(VRCMod)))
                     {
                         try

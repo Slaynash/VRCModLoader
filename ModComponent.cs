@@ -42,15 +42,8 @@ namespace VRCModLoader
             DontDestroyOnLoad(gameObject);
             Instance = this;
 
-            if (VRCToolsUpdater.CheckForVRCToolsUpdate())
-            {
-                VRCToolsUpdater.SheduleVRCToolsUpdate();
-            }
-            else
-            {
-                mods = new CompositeModCaller(ModManager.ModControllers);
-                mods.OnApplicationStart();
-            }
+            mods = new CompositeModCaller(ModManager.ModControllers);
+            mods.OnApplicationStart();
         }
 
         private static void LoadVRLoader()
