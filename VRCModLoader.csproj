@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -32,82 +32,104 @@
     <CodeAnalysisRuleSet />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Accessibility">
-      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Accessibility.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
-    </Reference>
-    <Reference Include="AWSSDK.CognitoIdentity">
-      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\AWSSDK.CognitoIdentity.dll</HintPath>
-    </Reference>
-    <Reference Include="AWSSDK.Core">
-      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\AWSSDK.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="AWSSDK.S3">
-      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\AWSSDK.S3.dll</HintPath>
-    </Reference>
-    <Reference Include="AWSSDK.SecurityToken">
-      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\AWSSDK.SecurityToken.dll</HintPath>
-    </Reference>
-    <Reference Include="Blake2Sharp">
-      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Blake2Sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="DotZLib">
-      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\DotZLib.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.ProtocolBuffers">
-      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Google.ProtocolBuffers.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="librsync.net">
-      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\librsync.net.dll</HintPath>
-    </Reference>
-    <Reference Include="LOOM">
-      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\LOOM.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Data.Tds">
-      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Mono.Data.Tds.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Posix">
-      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Mono.Posix.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Security">
-      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Mono.Security.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.WebBrowser">
-      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Mono.WebBrowser.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Accessibility">
+      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Accessibility.dll</HintPath>
+      <HintPath>lib\Accessibility.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>lib\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>lib\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="AWSSDK.CognitoIdentity">
+      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\AWSSDK.CognitoIdentity.dll</HintPath>
+      <HintPath>lib\AWSSDK.CognitoIdentity.dll</HintPath>
+    </Reference>
+    <Reference Include="AWSSDK.Core">
+      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\AWSSDK.Core.dll</HintPath>
+      <HintPath>lib\AWSSDK.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="AWSSDK.S3">
+      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\AWSSDK.S3.dll</HintPath>
+      <HintPath>lib\AWSSDK.S3.dll</HintPath>
+    </Reference>
+    <Reference Include="AWSSDK.SecurityToken">
+      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\AWSSDK.SecurityToken.dll</HintPath>
+      <HintPath>lib\AWSSDK.SecurityToken.dll</HintPath>
+    </Reference>
+    <Reference Include="Blake2Sharp">
+      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Blake2Sharp.dll</HintPath>
+      <HintPath>lib\Blake2Sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="DotZLib">
+      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\DotZLib.dll</HintPath>
+      <HintPath>lib\DotZLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.ProtocolBuffers">
+      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Google.ProtocolBuffers.dll</HintPath>
+      <HintPath>lib\Google.ProtocolBuffers.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>lib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="librsync.net">
+      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\librsync.net.dll</HintPath>
+      <HintPath>lib\librsync.net.dll</HintPath>
+    </Reference>
+    <Reference Include="LOOM">
+      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\LOOM.dll</HintPath>
+      <HintPath>lib\LOOM.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Data.Tds">
+      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Mono.Data.Tds.dll</HintPath>
+      <HintPath>lib\Mono.Data.Tds.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Posix">
+      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Mono.Posix.dll</HintPath>
+      <HintPath>lib\Mono.Posix.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Security">
+      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Mono.Security.dll</HintPath>
+      <HintPath>lib\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.WebBrowser">
+      <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\Mono.WebBrowser.dll</HintPath>
+      <HintPath>lib\Mono.WebBrowser.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>lib\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>lib\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <HintPath>lib\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestWWWModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\jeux\steam\SteamApps\common\VRChat\VRChat_Data\Managed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+      <HintPath>lib\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
     </Reference>
     <Reference Include="VRLoader, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\VRLoader\bin\Release\VRLoader.dll</HintPath>
+      <HintPath>Resources\VRLoader.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
