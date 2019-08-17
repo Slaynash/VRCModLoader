@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace VRCModLoader
 {
@@ -31,9 +32,15 @@ namespace VRCModLoader
                     onLevelWasInitializedMethod = method;
                 if (method.Name.Equals("OnUpdate") && method.GetParameters().Length == 0)
                     onUpdateMethod = method;
+                else if (method.Name.Equals("Update") && method.GetParameters().Length == 0 && onUpdateMethod == null)
+                    onUpdateMethod = method;
                 if (method.Name.Equals("OnFixedUpdate") && method.GetParameters().Length == 0)
                     onFixedUpdateMethod = method;
+                else if (method.Name.Equals("FixedUpdate") && method.GetParameters().Length == 0 && onFixedUpdateMethod == null)
+                    onFixedUpdateMethod = method;
                 if (method.Name.Equals("OnLateUpdate") && method.GetParameters().Length == 0)
+                    onLateUpdateMethod = method;
+                else if (method.Name.Equals("LateUpdate") && method.GetParameters().Length == 0 && onLateUpdateMethod == null)
                     onLateUpdateMethod = method;
                 if (method.Name.Equals("OnGUI") && method.GetParameters().Length == 0)
                     onGUIMethod = method;
@@ -42,6 +49,7 @@ namespace VRCModLoader
 
         public virtual void OnApplicationStart() => onApplicationStartMethod?.Invoke(mod, new object[] { });
         public virtual void OnApplicationQuit() => onApplicationQuitMethod?.Invoke(mod, new object[] { });
+        [Obsolete("Use 'UnityEngine.SceneManagement.SceneManager.sceneLoaded'")]
         public virtual void OnLevelWasLoaded(int level) => onLevelWasLoadedMethod?.Invoke(mod, new object[] { level });
         public virtual void OnLevelWasInitialized(int level) => onLevelWasInitializedMethod?.Invoke(mod, new object[] { level });
         public virtual void OnUpdate() => onUpdateMethod?.Invoke(mod, new object[] { });

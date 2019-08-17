@@ -163,7 +163,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VRCModController.cs" />
     <Compile Include="VRCModInfoAttribute.cs" />
-    <Compile Include="VRCToolsUpdater.cs" />
     <Compile Include="VRCModLogger.cs" />
   </ItemGroup>
   <ItemGroup>

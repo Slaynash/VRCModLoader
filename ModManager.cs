@@ -18,72 +18,41 @@ namespace VRCModLoader
     {
         internal static ModuleManager moduleManager;
 
-        private static List<VRCMod> _Mods = null;
-        private static List<VRCModController> _ModControllers = null;
-        private static List<VRModule> _Modules = null;
+        public static List<VRCMod> _Mods = null;
+        internal static List<VRCModController> ModControllers = null;
+        public static List<VRModule> _Modules = null;
+
         private static List<Assembly> loadedAssemblies = new List<Assembly>();
-
-        /// <summary>
-        /// Gets the list of loaded mods and loads them if necessary.
-        /// </summary>
-        internal static IEnumerable<VRCModController> ModControllers
-        {
-            get
-            {
-                if(_ModControllers == null)
-                {
-                    try
-                    {
-                        LoadMods();
-                    }
-                    catch(Exception e)
-                    {
-                        VRCModLogger.Log("An error occured while loading mods: " + e);
-                    }
-                }
-                return _ModControllers;
-            }
-        }
-
-        public static List<VRCMod> Mods
-        {
-            get
-            {
-                if (_Mods == null)
-                    LoadMods();
-                return _Mods;
-            }
-        }
-        
-        public static List<VRModule> Modules
-        {
-            get
-            {
-                if (_Modules == null)
-                    LoadMods();
-                return _Modules;
-            }
-        }
-        
 
         public static Coroutine StartCoroutine(IEnumerator routine)
         {
             return ModComponent.Instance.StartCoroutine(routine);
         }
 
+        public static List<VRCMod> Mods
+        {
+            get { return _Mods; }
+            set { _Mods = value; }
+        }
+
+        public static List<VRModule> Modules
+        {
+            get { return _Modules; }
+            set { _Modules = value; }
+        }
 
 
 
-        private static void LoadMods()
+        internal static void LoadMods()
         {
             VRCModLogger.Log("Looking for mods");
             string modDirectory = Path.Combine(Environment.CurrentDirectory, "Mods");
 
             string exeName = Path.GetFileNameWithoutExtension(AppInfo.StartupPath);
             VRCModLogger.Log(exeName);
-            _Mods = new List<VRCMod>();
-            _ModControllers = new List<VRCModController>();
-            _Modules = new List<VRModule>();
+            Mods = new List<VRCMod>();
+            ModControllers = new List<VRCModController>();
+            Modules = new List<VRModule>();
             if (moduleManager == null)
             {
                 moduleManager = new ModuleManager();
@@ -121,14 +90,14 @@ namespace VRCModLoader
             // DEBUG
             VRCModLogger.Log("Running on Unity " + Application.unityVersion);
             VRCModLogger.Log("-----------------------------");
-            VRCModLogger.Log("Loading mods from " + modDirectory + " and found " + _Mods.Count + " VRCMods and " + Modules.Count + " VRModules.");
+            VRCModLogger.Log("Loading mods from " + modDirectory + " and found " + Mods.Count + " VRCMods and " + Modules.Count + " VRModules.");
             VRCModLogger.Log("-----------------------------");
-            foreach (var mod in _Mods)
+            foreach (var mod in Mods)
                 VRCModLogger.Log(" " + mod.Name + " (" + mod.Version + ") by " + mod.Author + (mod.DownloadLink != null ? " (" + mod.DownloadLink + ")" : ""));
 
             VRCModLogger.Log("-----------------------------");
 
-            foreach (var mod in _Modules)
+            foreach (var mod in Modules)
                 VRCModLogger.Log(" " + mod.Name + " (" + mod.Version + ") by " + mod.Author);
             
             VRCModLogger.Log("-----------------------------");
@@ -145,8 +114,8 @@ namespace VRCModLoader
                         try
                         {
                             VRCMod modInstance = Activator.CreateInstance(t) as VRCMod;
-                            _Mods.Add(modInstance);
-                            _ModControllers.Add(new VRCModController(modInstance));
+                            Mods.Add(modInstance);
+                            ModControllers.Add(new VRCModController(modInstance));
                             VRCModInfoAttribute modInfoAttribute = modInstance.GetType().GetCustomAttributes(typeof(VRCModInfoAttribute), true).FirstOrDefault() as VRCModInfoAttribute;
                             if (modInfoAttribute != null)
                             {
@@ -167,12 +136,12 @@ namespace VRCModLoader
                         try
                         {
                             ModuleInfoAttribute moduleInfo;
-                            if ((moduleInfo = (t.GetCustomAttributes(typeof(ModuleInfoAttribute), true).FirstOrDefault<object>() as ModuleInfoAttribute)) != null)
+                            if ((moduleInfo = (t.GetCustomAttributes(typeof(ModuleInfoAttribute), true).FirstOrDefault() as ModuleInfoAttribute)) != null)
                             {
-                                VRModule vrmodule = ModComponent.Instance.gameObject.AddComponent(t) as VRModule;
-                                _Modules.Add(vrmodule);
+                                VRCModLogger.Log("Adding component " + t);
+                                VRModule vrmodule = ModComponent.modulesGameObject.gameObject.AddComponent(t) as VRModule;
+                                Modules.Add(vrmodule);
                                 vrmodule.Initialize(moduleInfo, moduleManager);
-                                VRCModLogger.Log("[VRLoader] {0} loaded.", vrmodule);
                             }
                         }
                         catch (Exception e)

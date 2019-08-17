@@ -12,20 +12,7 @@ namespace VRCModLoader
             if (!injected)
             {
                 injected = true;
-                var bootstrapper = new GameObject("Bootstrapper").AddComponent<Bootstrapper>();
-                bootstrapper.Destroyed += Bootstrapper_Destroyed;
-            }
-        }
-
-        private static void Bootstrapper_Destroyed()
-        {
-            try
-            {
-                ModComponent.Create();
-            }
-            catch(Exception e)
-            {
-                VRCModLogger.LogError(e.ToString());
+               new GameObject("Bootstrapper").AddComponent<Bootstrapper>();
             }
         }
     }
