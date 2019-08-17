@@ -143,5 +143,10 @@ namespace VRCModLoader
             freshlyLoaded = true;
         }
 
+        public static void OnModSettingsApplied()
+        {
+            Instance?.mods?.OnModSettingsApplied();
+        }
+
     }
 }

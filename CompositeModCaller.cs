@@ -28,52 +28,13 @@ namespace VRCModLoader
 
         public void OnLevelWasLoaded(int level)
         {
-            foreach (var modController in modControllers)
-            {
-                try
-                {
-                    modController.OnLevelWasLoaded(level);
-                }
-                catch (Exception ex)
-                {
-                    VRCModLogger.LogError("{0}: {1}", modController.mod.Name, ex);
-                }
-            }
+            Invoke(modController => modController.OnLevelWasLoaded(level));
         }
-
-
-        private void Invoke(CompositeCall callback)
-        {
-            foreach (var modController in modControllers)
-            {
-                try
-                {
-                    callback(modController);
-                }
-                catch (Exception ex)
-                {
-                    VRCModLogger.LogError("{0}: {1}", modController.mod.Name, ex);
-                }
-            }
-        }
-
-
 
         public void OnLevelWasInitialized(int level)
         {
-            foreach (var modController in modControllers)
-            {
-                try
-                {
-                    modController.OnLevelWasInitialized(level);
-                }
-                catch (Exception ex)
-                {
-                    VRCModLogger.LogError("{0}: {1}", modController.mod.Name, ex);
-                }
-            }
+            Invoke(modController => modController.OnLevelWasInitialized(level));
         }
-
 
         public void OnUpdate()
         {
@@ -92,6 +53,27 @@ namespace VRCModLoader
         public void OnGUI()
         {
             Invoke(modController => modController.OnGUI());
+        }
+
+        public void OnModSettingsApplied()
+        {
+            Invoke(modController => modController.OnModSettingsApplied());
+        }
+
+
+        private void Invoke(CompositeCall callback)
+        {
+            foreach (var modController in modControllers)
+            {
+                try
+                {
+                    callback(modController);
+                }
+                catch (Exception ex)
+                {
+                    VRCModLogger.LogError("{0}: {1}", modController.mod.Name, ex);
+                }
+            }
         }
     }
 }

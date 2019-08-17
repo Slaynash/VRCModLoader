@@ -16,6 +16,8 @@ namespace VRCModLoader
 {
     public static class ModManager
     {
+        public static readonly string VERSION = "2.0.0-pre1";
+
         internal static ModuleManager moduleManager;
 
         public static List<VRCMod> _Mods = null;
@@ -88,7 +90,7 @@ namespace VRCModLoader
 
 
             // DEBUG
-            VRCModLogger.Log("Running on Unity " + Application.unityVersion);
+            VRCModLogger.Log("Running on Unity " + Application.unityVersion + ", using VRCModLoader " + VERSION);
             VRCModLogger.Log("-----------------------------");
             VRCModLogger.Log("Loading mods from " + modDirectory + " and found " + Mods.Count + " VRCMods and " + Modules.Count + " VRModules.");
             VRCModLogger.Log("-----------------------------");

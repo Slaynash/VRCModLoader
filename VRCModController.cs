@@ -13,6 +13,7 @@ namespace VRCModLoader
         private MethodInfo onFixedUpdateMethod;
         private MethodInfo onLateUpdateMethod;
         private MethodInfo onGUIMethod;
+        private MethodInfo onModSettingsApplied;
         public VRCMod mod;
 
         public VRCModController(VRCMod mod)
@@ -44,6 +45,8 @@ namespace VRCModLoader
                     onLateUpdateMethod = method;
                 if (method.Name.Equals("OnGUI") && method.GetParameters().Length == 0)
                     onGUIMethod = method;
+                if (method.Name.Equals("OnModSettingsApplied") && method.GetParameters().Length == 0)
+                    onModSettingsApplied = method;
             }
         }
 
@@ -56,5 +59,6 @@ namespace VRCModLoader
         public virtual void OnFixedUpdate() => onFixedUpdateMethod?.Invoke(mod, new object[] { });
         public virtual void OnLateUpdate() => onLateUpdateMethod?.Invoke(mod, new object[] { });
         public virtual void OnGUI() => onGUIMethod?.Invoke(mod, new object[] { });
+        public virtual void OnModSettingsApplied() => onModSettingsApplied?.Invoke(mod, new object[] { });
     }
 }
