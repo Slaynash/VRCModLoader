@@ -26,9 +26,9 @@ namespace VRCModLoader
             }
             else
             {
-                fileStream = new FileStream(logFilePath, FileMode.Append);
+                fileStream = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Read);
             }
-            log = new StreamWriter(fileStream);
+            log = new StreamWriter(fileStream, System.Text.Encoding.UTF8);
             log.AutoFlush = true;
         }
 
