@@ -189,6 +189,11 @@ namespace VRCModLoader
                 }
             }
         }
-
     }
+    public enum LevelType {
+		World = -1,
+		Loading = 0,
+		UI = 1,
+		Login = 2
+	}
 }
