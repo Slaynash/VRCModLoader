@@ -11,25 +11,38 @@ namespace VRCModLoader
 
         internal static void Init()
         {
-            FileStream fileStream = null;
-            DirectoryInfo logDirInfo = null;
-            FileInfo logFileInfo;
+            string logFilePath = Path.Combine(Environment.CurrentDirectory, ("Logs/VRCModLoader_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-fff") + ".log"));
+            FileInfo logFileInfo = new FileInfo(logFilePath);
+            DirectoryInfo logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
 
-            string logFilePath = Path.Combine(Environment.CurrentDirectory, "Logs");
-            logFilePath = logFilePath + "/VRCModLoader_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-fff") + ".log";
-            logFileInfo = new FileInfo(logFilePath);
-            logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
-            if (!logDirInfo.Exists) logDirInfo.Create();
-            if (!logFileInfo.Exists)
-            {
-                fileStream = logFileInfo.Create();
-            }
+            if (!logDirInfo.Exists)
+                logDirInfo.Create();
             else
-            {
+                CleanOld(logDirInfo);
+
+            FileStream fileStream = null;
+            if (!logFileInfo.Exists)
+                fileStream = logFileInfo.Create();
+            else
                 fileStream = new FileStream(logFilePath, FileMode.Open, FileAccess.Write, FileShare.Read);
-            }
+
             log = new StreamWriter(fileStream);
             log.AutoFlush = true;
+            Log("Logger Initialized");
+        }
+		
+        internal static void CleanOld(DirectoryInfo logDirInfo)
+        {
+            FileInfo[] filetbl = logDirInfo.GetFiles("VRCModLoader_*");
+            if (filetbl.Length > 0)
+            {
+                List<FileInfo> filelist = filetbl.ToList().OrderBy(x => x.LastWriteTime).ToList();
+                for (int i = (filelist.Count - 10); i > -1; i--)
+                {
+                    FileInfo file = filelist[i];
+                    file.Delete();
+                }
+            }
         }
 
         internal static void Stop()
