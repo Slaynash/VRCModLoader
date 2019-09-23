@@ -14,22 +14,52 @@ namespace VRCModLoader
             FileStream fileStream = null;
             DirectoryInfo logDirInfo = null;
             FileInfo logFileInfo;
-
+			
+            DateTime nowTime = DateTime.Now;
             string logFilePath = Path.Combine(Environment.CurrentDirectory, "Logs");
-            logFilePath = logFilePath + "/VRCModLoader_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-fff") + ".log";
+            logFilePath = logFilePath + "/VRCModLoader_" + nowTime.ToString("yyyy-MM-dd-HH-mm-ss-fff") + ".log";
             logFileInfo = new FileInfo(logFilePath);
             logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
-            if (!logDirInfo.Exists) logDirInfo.Create();
-            if (!logFileInfo.Exists)
-            {
-                fileStream = logFileInfo.Create();
-            }
+            if (!logDirInfo.Exists)
+                logDirInfo.Create();
             else
-            {
+                CleanOld(logDirInfo, nowTime);
+            if (!logFileInfo.Exists)
+                fileStream = logFileInfo.Create();
+            else
                 fileStream = new FileStream(logFilePath, FileMode.Open, FileAccess.Write, FileShare.Read);
-            }
             log = new StreamWriter(fileStream);
             log.AutoFlush = true;
+        }
+		
+        internal static void CleanOld(DirectoryInfo logDirInfo, DateTime nowTime)
+        {
+            FileInfo[] filetbl = logDirInfo.GetFiles("VRCModLoader_*");
+            if (filetbl.Length > 0)
+            {
+                List<FileInfo> filelist = filetbl.ToList();
+
+                // Remove Logs Older than 24 Hours
+                for (int i = 0; i < filelist.Count; i++)
+                {
+                    FileInfo file = filelist[i];
+                    TimeSpan span = nowTime.Subtract(file.LastWriteTime);
+                    if (span.Hours >= 24)
+                    {
+                        file.Delete();
+                        filelist.RemoveAt(i);
+                        i--;
+                    }
+                }
+
+                // Remove All but Last 9 Logs
+                for (int i = (filelist.Count - 10); i > -1; i--)
+                {
+                    FileInfo file = filelist[i];
+                    file.Delete();
+                    filelist.RemoveAt(i);
+                }
+            }
         }
 
         internal static void Stop()
