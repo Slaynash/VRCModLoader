@@ -20,21 +20,7 @@ namespace VRCModLoader
     [Obsolete("Please use VRCTools.ModPrefs instead")]
     public static class ModPrefs
     {
-        /*private static IniFile _instance;
-        private static IniFile Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    string userDataDir = Path.Combine(Environment.CurrentDirectory, "UserData");
-                    if (!Directory.Exists(userDataDir)) Directory.CreateDirectory(userDataDir);
 
-                    _instance = new IniFile(Path.Combine(userDataDir, "modprefs.ini"));
-                }
-                return _instance;
-            }
-        }*/
         private static List<Pref> _prefList;
         private static List<Pref> prefList
         {
@@ -70,26 +56,34 @@ namespace VRCModLoader
 
         private static void WriteJson()
         {
-            string configPath = "";
+            string FilePath = "";
             if (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.WindowsPlayer)
             {
-               configPath = Path.Combine(Environment.CurrentDirectory, "UserData");
-                if (!Directory.Exists(configPath)) Directory.CreateDirectory(configPath);
+               FilePath = Path.Combine(Environment.CurrentDirectory, "UserData");
+                if (!Directory.Exists(FilePath)) Directory.CreateDirectory(FilePath);
             }
             if (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.Android)
             {
-                configPath = "/sdcard/VRCTools/UserData";
-                if (!Directory.Exists(configPath)) Directory.CreateDirectory(configPath);
+                FilePath = "/sdcard/VRCTools/UserData";
+                if (!Directory.Exists(FilePath)) Directory.CreateDirectory(FilePath);
             }
-            if (File.Exists(Path.Combine(configPath, "modPrefs.json.tmp")))
-                File.Delete(Path.Combine(configPath, "modPrefs.json.tmp"));
-            File.WriteAllText(Path.Combine(configPath, "modPrefs.json.tmp"), JsonConvert.SerializeObject(prefList, Formatting.Indented));
-            if (File.Exists(Path.Combine(configPath, "modPrefs.json")))
-                File.Delete(Path.Combine(configPath, "modPrefs.json"));
-            File.Move(Path.Combine(configPath, "modPrefs.json.tmp"), Path.Combine(configPath, "modPrefs.json"));
+
+            FileInfo jsonFileInfo = new FileInfo(FilePath);
+            FileStream jsonFileStream = null;
+            if (!jsonFileInfo.Exists)
+                jsonFileStream = jsonFileInfo.Create();
+            else
+                jsonFileStream = new FileStream(FilePath, FileMode.Open, FileAccess.Write, FileShare.Read);
+            JsonSerializer jsonSerializer = new JsonSerializer();
+            using (StreamWriter jsonStreamWriter = new StreamWriter(jsonFileStream))
+            {
+                jsonStreamWriter.AutoFlush = true;
+                using (JsonWriter jsonWriter = new JsonTextWriter(jsonStreamWriter))
+                    jsonSerializer.Serialize(jsonWriter, prefList);
+            }
         }
         /// <summary>
-        /// Gets a string from the ini.
+        /// Gets a string from the JSON.
         /// </summary>
         /// <param name="section">Section of the key.</param>
         /// <param name="name">Name of the key.</param>
@@ -109,7 +103,7 @@ namespace VRCModLoader
         }
 
         /// <summary>
-        /// Gets an int from the ini.
+        /// Gets an int from the JSON.
         /// </summary>
         /// <param name="section">Section of the key.</param>
         /// <param name="name">Name of the key.</param>
@@ -129,7 +123,7 @@ namespace VRCModLoader
 
 
         /// <summary>
-        /// Gets a float from the ini.
+        /// Gets a float from the JSON.
         /// </summary>
         /// <param name="section">Section of the key.</param>
         /// <param name="name">Name of the key.</param>
@@ -148,7 +142,7 @@ namespace VRCModLoader
         }
 
         /// <summary>
-        /// Gets a bool from the ini.
+        /// Gets a bool from the JSON.
         /// </summary>
         /// <param name="section">Section of the key.</param>
         /// <param name="name">Name of the key.</param>
@@ -157,13 +151,10 @@ namespace VRCModLoader
         /// <returns></returns>
         public static bool GetBool(string section, string name, bool defaultValue = false, bool autoSave = false)
         {
-            /*string sVal = GetString(section, name, null);
-            if (sVal == "1" || sVal == "0")
+            if (prefList.Find(i => i.section == section && i.name == name) != null)
             {
-                return sVal == "1";*/
-            bool value = (bool)prefList.Find(i => i.section == section && i.name == name).value;
-            if (value != null)
-            {
+                bool value = (bool)prefList.Find(i => i.section == section && i.name == name).value;
+            
                 return value;
             }
             else if (autoSave)
@@ -176,7 +167,7 @@ namespace VRCModLoader
 
 
         /// <summary>
-        /// Checks whether or not a key exists in the ini.
+        /// Checks whether or not a key exists in the JSON.
         /// </summary>
         /// <param name="section">Section of the key.</param>
         /// <param name="name">Name of the key.</param>
@@ -191,7 +182,7 @@ namespace VRCModLoader
         }
 
         /// <summary>
-        /// Sets a float in the ini.
+        /// Sets a float in the JSON.
         /// </summary>
         /// <param name="section">Section of the key.</param>
         /// <param name="name">Name of the key.</param>
@@ -206,7 +197,7 @@ namespace VRCModLoader
         }
 
         /// <summary>
-        /// Sets an int in the ini.
+        /// Sets an int in the JSON.
         /// </summary>
         /// <param name="section">Section of the key.</param>
         /// <param name="name">Name of the key.</param>
@@ -221,7 +212,7 @@ namespace VRCModLoader
         }
 
         /// <summary>
-        /// Sets a string in the ini.
+        /// Sets a string in the JSON.
         /// </summary>
         /// <param name="section">Section of the key.</param>
         /// <param name="name">Name of the key.</param>
@@ -236,7 +227,7 @@ namespace VRCModLoader
         }
 
         /// <summary>
-        /// Sets a bool in the ini.
+        /// Sets a bool in the JSON.
         /// </summary>
         /// <param name="section">Section of the key.</param>
         /// <param name="name">Name of the key.</param>
