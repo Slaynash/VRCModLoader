@@ -157,7 +157,6 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="CompositeModCaller.cs" />
     <Compile Include="ConsoleWindow.cs" />
-    <Compile Include="IniFile.cs" />
     <Compile Include="Injector.cs" />
     <Compile Include="Properties\Resources.Designer.cs" />
     <Compile Include="VRCMod.cs" />

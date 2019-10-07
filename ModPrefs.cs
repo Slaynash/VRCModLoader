@@ -44,6 +44,11 @@ namespace VRCModLoader
                 {
                     string userDataDir = Path.Combine(Environment.CurrentDirectory, "UserData");
                     if (!Directory.Exists(userDataDir)) Directory.CreateDirectory(userDataDir);
+                    if (!File.Exists(Path.Combine(userDataDir, "modPrefs.json")))
+                    {
+                        _prefList = new List<Pref>();
+                        File.WriteAllText(Path.Combine(userDataDir, "modPrefs.json"), JsonConvert.SerializeObject(_prefList, Formatting.Indented));
+                    }
                     var input = File.ReadAllText(Path.Combine(userDataDir, "modPrefs.json"));
                     _prefList = JsonConvert.DeserializeObject<List<Pref>>(input);
                 }
@@ -51,6 +56,11 @@ namespace VRCModLoader
                 {
                     string userDataDir = "/sdcard/VRCTools/UserData";
                     if (!Directory.Exists(userDataDir)) Directory.CreateDirectory(userDataDir);
+                    if (!File.Exists(Path.Combine(userDataDir, "modPrefs.json")))
+                    {
+                        _prefList = new List<Pref>();
+                        File.WriteAllText(Path.Combine(userDataDir, "modPrefs.json"), JsonConvert.SerializeObject(_prefList, Formatting.Indented));
+                    }
                     var input = File.ReadAllText(Path.Combine(userDataDir, "modPrefs.json"));
                     _prefList = JsonConvert.DeserializeObject<List<Pref>>(input);
                 }
@@ -73,7 +83,7 @@ namespace VRCModLoader
             }
             if (File.Exists(Path.Combine(configPath, "modPrefs.json.tmp")))
                 File.Delete(Path.Combine(configPath, "modPrefs.json.tmp"));
-            File.WriteAllText(Path.Combine(configPath, "modPrefs.json.tmp"), JsonConvert.SerializeObject(_prefList, Formatting.Indented));
+            File.WriteAllText(Path.Combine(configPath, "modPrefs.json.tmp"), JsonConvert.SerializeObject(prefList, Formatting.Indented));
             if (File.Exists(Path.Combine(configPath, "modPrefs.json")))
                 File.Delete(Path.Combine(configPath, "modPrefs.json"));
             File.Move(Path.Combine(configPath, "modPrefs.json.tmp"), Path.Combine(configPath, "modPrefs.json"));
