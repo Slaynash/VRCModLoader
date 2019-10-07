@@ -58,7 +58,26 @@ namespace VRCModLoader
             }
         }
 
-
+        private static void WriteJson()
+        {
+            string configPath = "";
+            if (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.WindowsPlayer)
+            {
+               configPath = Path.Combine(Environment.CurrentDirectory, "UserData");
+                if (!Directory.Exists(configPath)) Directory.CreateDirectory(configPath);
+            }
+            if (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.Android)
+            {
+                configPath = "/sdcard/VRCTools/UserData";
+                if (!Directory.Exists(configPath)) Directory.CreateDirectory(configPath);
+            }
+            if (File.Exists(Path.Combine(configPath, "modPrefs.json.tmp")))
+                File.Delete(Path.Combine(configPath, "modPrefs.json.tmp"));
+            File.WriteAllText(Path.Combine(configPath, "modPrefs.json.tmp"), JsonConvert.SerializeObject(_prefList, Formatting.Indented));
+            if (File.Exists(Path.Combine(configPath, "modPrefs.json")))
+                File.Delete(Path.Combine(configPath, "modPrefs.json"));
+            File.Move(Path.Combine(configPath, "modPrefs.json.tmp"), Path.Combine(configPath, "modPrefs.json"));
+        }
         /// <summary>
         /// Gets a string from the ini.
         /// </summary>
@@ -169,7 +188,11 @@ namespace VRCModLoader
         /// <param name="value">Value that should be written.</param>
         public static void SetFloat(string section, string name, float value)
         {
-            Instance.IniWriteValue(section, name, value.ToString());
+            if (prefList.Find(i => i.section == section && i.name == name) != null)
+                prefList.Find(i => i.section == section && i.name == name).value = value.ToString();
+            else
+                prefList.Add(new Pref(){ section = section, name = name, value = value });
+            WriteJson();
         }
 
         /// <summary>
@@ -180,8 +203,11 @@ namespace VRCModLoader
         /// <param name="value">Value that should be written.</param>
         public static void SetInt(string section, string name, int value)
         {
-            Instance.IniWriteValue(section, name, value.ToString());
-
+            if (prefList.Find(i => i.section == section && i.name == name) != null)
+                prefList.Find(i => i.section == section && i.name == name).value = value.ToString();
+            else
+                prefList.Add(new Pref() { section = section, name = name, value = value });
+            WriteJson();
         }
 
         /// <summary>
@@ -192,8 +218,11 @@ namespace VRCModLoader
         /// <param name="value">Value that should be written.</param>
         public static void SetString(string section, string name, string value)
         {
-            Instance.IniWriteValue(section, name, value.Trim());
-
+            if (prefList.Find(i => i.section == section && i.name == name) != null)
+                prefList.Find(i => i.section == section && i.name == name).value = value;
+            else
+                prefList.Add(new Pref() { section = section, name = name, value = value });
+            WriteJson();
         }
 
         /// <summary>
@@ -204,8 +233,11 @@ namespace VRCModLoader
         /// <param name="value">Value that should be written.</param>
         public static void SetBool(string section, string name, bool value)
         {
-            Instance.IniWriteValue(section, name, value ? "1" : "0");
-
+            if (prefList.Find(i => i.section == section && i.name == name) != null)
+                prefList.Find(i => i.section == section && i.name == name).value = value;
+            else
+                prefList.Add(new Pref() { section = section, name = name, value = value });
+            WriteJson();
         }
     }
 }
