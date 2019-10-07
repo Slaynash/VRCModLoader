@@ -48,7 +48,11 @@ namespace VRCModLoader
         internal static void LoadMods()
         {
             VRCModLogger.Log("Looking for mods");
-            string modDirectory = Path.Combine(Environment.CurrentDirectory, "Mods");
+            string modDirectory = "";
+            if (Application.platform == RuntimePlatform.WindowsPlayer)
+                modDirectory = Path.Combine(Environment.CurrentDirectory, "Mods");
+            if (Application.platform == RuntimePlatform.Android)
+                modDirectory = "/sdcard/VRCTools/Mods";
 
             string exeName = Path.GetFileNameWithoutExtension(AppInfo.StartupPath);
             VRCModLogger.Log(exeName);

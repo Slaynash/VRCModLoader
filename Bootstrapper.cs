@@ -19,7 +19,8 @@ namespace VRCModLoader
             if (Environment.CommandLine.Contains("--verbose") || ModPrefs.GetBool("vrctools", "enabledebugconsole", false))
             {
                 VRCModLogger.consoleEnabled = true;
-                GuiConsole.CreateConsole();
+                if (Application.platform == RuntimePlatform.WindowsPlayer)
+                    GuiConsole.CreateConsole();
                 VRCModLogger.Log("[VRCModLoader] Bootstrapper created");
             }
 

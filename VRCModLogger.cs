@@ -15,7 +15,13 @@ namespace VRCModLoader
             DirectoryInfo logDirInfo = null;
             FileInfo logFileInfo;
 
-            string logFilePath = Path.Combine(Environment.CurrentDirectory, "Logs");
+            string logFilePath = "";
+            //string logFilePath = Path.Combine(Environment.CurrentDirectory, "Logs");
+            if (Application.platform == RuntimePlatform.WindowsPlayer)
+                logFilePath = Path.Combine(Environment.CurrentDirectory, "Logs");
+            if (Application.platform == RuntimePlatform.Android)
+                logFilePath = "/sdcard/VRCTools/Logs";
+
             logFilePath = logFilePath + "/VRCModLoader_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-fff") + ".log";
             logFileInfo = new FileInfo(logFilePath);
             logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);

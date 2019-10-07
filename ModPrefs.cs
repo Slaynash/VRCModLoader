@@ -2,16 +2,25 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Newtonsoft;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace VRCModLoader
 {
+    public class Pref
+    {
+        public string section { get; set; } = "";
+        public string name { get; set; } = "";
+        public object value { get; set; } = null;
+    }
     /// <summary>
     /// Allows to get and set preferences for your mod. 
     /// </summary>
     [Obsolete("Please use VRCTools.ModPrefs instead")]
     public static class ModPrefs
     {
-        private static IniFile _instance;
+        /*private static IniFile _instance;
         private static IniFile Instance
         {
             get
@@ -24,6 +33,28 @@ namespace VRCModLoader
                     _instance = new IniFile(Path.Combine(userDataDir, "modprefs.ini"));
                 }
                 return _instance;
+            }
+        }*/
+        private static List<Pref> _prefList;
+        private static List<Pref> prefList
+        {
+            get
+            {
+                if (_prefList == null && UnityEngine.Application.platform == UnityEngine.RuntimePlatform.WindowsPlayer)
+                {
+                    string userDataDir = Path.Combine(Environment.CurrentDirectory, "UserData");
+                    if (!Directory.Exists(userDataDir)) Directory.CreateDirectory(userDataDir);
+                    var input = File.ReadAllText(Path.Combine(userDataDir, "modPrefs.json"));
+                    _prefList = JsonConvert.DeserializeObject<List<Pref>>(input);
+                }
+                if (_prefList == null && UnityEngine.Application.platform == UnityEngine.RuntimePlatform.Android)
+                {
+                    string userDataDir = "/sdcard/VRCTools/UserData";
+                    if (!Directory.Exists(userDataDir)) Directory.CreateDirectory(userDataDir);
+                    var input = File.ReadAllText(Path.Combine(userDataDir, "modPrefs.json"));
+                    _prefList = JsonConvert.DeserializeObject<List<Pref>>(input);
+                }
+                return _prefList;
             }
         }
 
@@ -38,7 +69,8 @@ namespace VRCModLoader
         /// <returns></returns>
         public static string GetString(string section, string name, string defaultValue = "", bool autoSave = false)
         {
-            string value = Instance.IniReadValue(section, name);
+            //string value = Instance.IniReadValue(section, name);
+            string value = (string)prefList.Find(i => i.section == section && i.name == name).value;
             if (value != null && value != "")
                 return value;
             else if (autoSave)
@@ -58,7 +90,7 @@ namespace VRCModLoader
         public static int GetInt(string section, string name, int defaultValue = 0, bool autoSave = false)
         {
             int value;
-            if (int.TryParse(Instance.IniReadValue(section, name), out value))
+            if (int.TryParse((string)prefList.Find(i => i.section == section && i.name == name).value, out value))
                 return value;
             else if (autoSave)
                 SetInt(section, name, defaultValue);
@@ -78,7 +110,7 @@ namespace VRCModLoader
         public static float GetFloat(string section, string name, float defaultValue = 0f, bool autoSave = false)
         {
             float value;
-            if (float.TryParse(Instance.IniReadValue(section, name), out value))
+            if (float.TryParse((string)prefList.Find(i => i.section == section && i.name == name).value, out value))
                 return value;
             else if (autoSave)
                 SetFloat(section, name, defaultValue);
@@ -96,11 +128,16 @@ namespace VRCModLoader
         /// <returns></returns>
         public static bool GetBool(string section, string name, bool defaultValue = false, bool autoSave = false)
         {
-            string sVal = GetString(section, name, null);
+            /*string sVal = GetString(section, name, null);
             if (sVal == "1" || sVal == "0")
             {
-                return sVal == "1";
-            } else if (autoSave)
+                return sVal == "1";*/
+            bool value = (bool)prefList.Find(i => i.section == section && i.name == name).value;
+            if (value != null)
+            {
+                return value;
+            }
+            else if (autoSave)
             {
                 SetBool(section, name, defaultValue);
             }
@@ -117,7 +154,11 @@ namespace VRCModLoader
         /// <returns></returns>
         public static bool HasKey(string section, string name)
         {
-            return Instance.IniReadValue(section, name) != null;
+            if (prefList.Find(i => i.section == section && i.name == name) != null)
+                return true;
+            else
+                return false;
+            //return Instance.IniReadValue(section, name) != null;
         }
 
         /// <summary>
