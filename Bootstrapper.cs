@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection;
 using UnityEngine;
-using Windows;
 
 namespace VRCModLoader
 {
     class Bootstrapper : MonoBehaviour
     {
         internal static bool loadmods = true;
+        internal static MethodInfo CreateConsoleMethod;
         
         void Awake()
         {
@@ -19,7 +20,8 @@ namespace VRCModLoader
             if (Environment.CommandLine.Contains("--verbose") || ModPrefs.GetBool("vrctools", "enabledebugconsole", false))
             {
                 VRCModLogger.consoleEnabled = true;
-                GuiConsole.CreateConsole();
+                if (Application.platform == RuntimePlatform.WindowsPlayer)
+                    CreateConsole();
                 VRCModLogger.Log("[VRCModLoader] Bootstrapper created");
             }
 
@@ -44,6 +46,23 @@ namespace VRCModLoader
             {
                 VRCModLogger.LogError(e.ToString());
             }
+        }
+
+        private static void CreateConsole()
+        {
+            if (CreateConsoleMethod == null)
+            {
+                Type foundType = null;
+                bool foundconsoletype = AppDomain.CurrentDomain.GetAssemblies().Any(a =>
+                {
+                    foundType = a.GetType("Windows.GuiConsole");
+                    return (foundType != null);
+                });
+                if (foundType != null)
+                    CreateConsoleMethod = foundType.GetMethod("CreateConsole");
+            }
+            if (CreateConsoleMethod != null)
+                CreateConsoleMethod.Invoke(null, null);
         }
     }
 }

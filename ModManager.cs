@@ -48,10 +48,11 @@ namespace VRCModLoader
         internal static void LoadMods()
         {
             VRCModLogger.Log("Looking for mods");
-            string modDirectory = Path.Combine(Environment.CurrentDirectory, "Mods");
-
-            string exeName = Path.GetFileNameWithoutExtension(AppInfo.StartupPath);
-            VRCModLogger.Log(exeName);
+            string modDirectory = "";
+            if (Application.platform == RuntimePlatform.WindowsPlayer)
+                modDirectory = Path.Combine(Environment.CurrentDirectory, "Mods");
+            if (Application.platform == RuntimePlatform.Android)
+                modDirectory = "/sdcard/VRCTools/Mods";
             Mods = new List<VRCMod>();
             ModControllers = new List<VRCModController>();
             Modules = new List<VRModule>();
@@ -173,22 +174,5 @@ namespace VRCModLoader
                 return e.Types.Where(t => t != null);
             }
         }
-
-        public class AppInfo
-        {
-            [DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = false)]
-            private static extern int GetModuleFileName(HandleRef hModule, StringBuilder buffer, int length);
-            private static HandleRef NullHandleRef = new HandleRef(null, IntPtr.Zero);
-            public static string StartupPath
-            {
-                get
-                {
-                    StringBuilder stringBuilder = new StringBuilder(260);
-                    GetModuleFileName(NullHandleRef, stringBuilder, stringBuilder.Capacity);
-                    return stringBuilder.ToString();
-                }
-            }
-        }
-
     }
 }

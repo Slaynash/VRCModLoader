@@ -64,8 +64,11 @@ namespace VRCModLoader
             SceneManager.sceneLoaded += (scene, method) =>
             {
                 VRCModLogger.Log("[ModComponent] Scene Loaded: " + scene.name);
+
                 if (scene.name == "ui")
                     StartCoroutine(StartVRModules());
+
+                mods.OnLevelWasLoaded(scene.buildIndex);
             };
         }
 
@@ -90,7 +93,7 @@ namespace VRCModLoader
         void Start()
         {
             VRCModLogger.Log("[ModComponent] Start called");
-            OnLevelWasLoaded(Application.loadedLevel);
+            OnLevelWasLoadedNow(Application.loadedLevel);
         }
 
         void Update()
@@ -135,7 +138,7 @@ namespace VRCModLoader
             quitting = true;
         }
 
-        void OnLevelWasLoaded(int level)
+        void OnLevelWasLoadedNow(int level)
         {
             VRCModLogger.Log("[ModComponent] OnLevelWasLoaded called (" + level + ")");
             transform.SetAsLastSibling();

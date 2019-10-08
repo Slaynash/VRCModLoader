@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Windows
 {
-
+#if (PC)
     class GuiConsole 
     {
         [DllImport("kernel32.dll")]
@@ -35,4 +35,5 @@ namespace Windows
             ShowConsole();
         }
     }
+#endif
 }
