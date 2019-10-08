@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+#if (PC)
 using Windows;
+#endif
 
 namespace VRCModLoader
 {
@@ -15,8 +17,8 @@ namespace VRCModLoader
         {
             VRCModLogger.Init();
             VRCModLogger.Log("[VRCModLoader] Logger Initialised");
-
-            if ((Environment.CommandLine.Contains("--verbose") || ModPrefs.GetBool("vrctools", "enabledebugconsole", false)) && Application.platform == RuntimePlatform.WindowsPlayer)
+#if (PC)
+            if ((Environment.CommandLine.Contains("--verbose") || ModPrefs.GetBool("vrctools", "enabledebugconsole", false)))
             {
                 VRCModLogger.consoleEnabled = true;
                 GuiConsole.CreateConsole();
@@ -27,6 +29,7 @@ namespace VRCModLoader
             {
                 loadmods = false;
             }
+#endif
         }
 
         void Start()
