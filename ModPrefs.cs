@@ -38,7 +38,7 @@ namespace VRCModLoader
                     var input = File.ReadAllText(Path.Combine(userDataDir, "modPrefs.json"));
                     _prefList = JsonConvert.DeserializeObject<List<Pref>>(input);
                 }
-                if (_prefList == null && UnityEngine.Application.platform == UnityEngine.RuntimePlatform.Android)
+                else if (_prefList == null && UnityEngine.Application.platform == UnityEngine.RuntimePlatform.Android)
                 {
                     string userDataDir = "/sdcard/VRCTools/UserData";
                     if (!Directory.Exists(userDataDir)) Directory.CreateDirectory(userDataDir);
@@ -62,7 +62,7 @@ namespace VRCModLoader
                FilePath = Path.Combine(Environment.CurrentDirectory, "UserData");
                 if (!Directory.Exists(FilePath)) Directory.CreateDirectory(FilePath);
             }
-            if (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.Android)
+            else if (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.Android)
             {
                 FilePath = "/sdcard/VRCTools/UserData";
                 if (!Directory.Exists(FilePath)) Directory.CreateDirectory(FilePath);
