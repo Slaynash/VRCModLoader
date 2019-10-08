@@ -10,17 +10,16 @@ namespace VRCModLoader
     class Bootstrapper : MonoBehaviour
     {
         internal static bool loadmods = true;
-        
+
         void Awake()
         {
             VRCModLogger.Init();
             VRCModLogger.Log("[VRCModLoader] Logger Initialised");
 
-            if (Environment.CommandLine.Contains("--verbose") || ModPrefs.GetBool("vrctools", "enabledebugconsole", false))
+            if ((Environment.CommandLine.Contains("--verbose") || ModPrefs.GetBool("vrctools", "enabledebugconsole", false)) && Application.platform == RuntimePlatform.WindowsPlayer)
             {
                 VRCModLogger.consoleEnabled = true;
-                if (Application.platform == RuntimePlatform.WindowsPlayer)
-                    GuiConsole.CreateConsole();
+                GuiConsole.CreateConsole();
                 VRCModLogger.Log("[VRCModLoader] Bootstrapper created");
             }
 

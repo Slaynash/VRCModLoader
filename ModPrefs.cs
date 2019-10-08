@@ -68,6 +68,7 @@ namespace VRCModLoader
                 if (!Directory.Exists(FilePath)) Directory.CreateDirectory(FilePath);
             }
 
+            FilePath = Path.Combine(FilePath, "modPrefs.json");
             FileInfo jsonFileInfo = new FileInfo(FilePath);
             FileStream jsonFileStream = null;
             if (!jsonFileInfo.Exists)
