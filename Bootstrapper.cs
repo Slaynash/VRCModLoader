@@ -52,16 +52,14 @@ namespace VRCModLoader
         {
             if (CreateConsoleMethod == null)
             {
-                Assembly[] asmtbl = AppDomain.CurrentDomain.GetAssemblies();
-                foreach (Assembly a in asmtbl)
+                Type foundType = null;
+                bool foundconsoletype = AppDomain.CurrentDomain.GetAssemblies().Any(a =>
                 {
-                    Type consoleclass = a.GetType("Windows.GuiConsole");
-                    if (consoleclass != null)
-                    {
-                        CreateConsoleMethod = consoleclass.GetMethod("CreateConsole");
-                        break;
-                    }
-                }
+                    foundType = a.GetType("Windows.GuiConsole");
+                    return (foundType != null);
+                });
+                if (foundType != null)
+                    CreateConsoleMethod = foundType.GetMethod("CreateConsole");
             }
             if (CreateConsoleMethod != null)
                 CreateConsoleMethod.Invoke(null, null);

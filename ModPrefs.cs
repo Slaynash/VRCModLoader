@@ -26,21 +26,13 @@ namespace VRCModLoader
         {
             get
             {
-                if (_prefList == null && UnityEngine.Application.platform == UnityEngine.RuntimePlatform.WindowsPlayer)
+                if (_prefList == null)
                 {
-                    string userDataDir = Path.Combine(Environment.CurrentDirectory, "UserData");
-                    if (!Directory.Exists(userDataDir)) Directory.CreateDirectory(userDataDir);
-                    if (!File.Exists(Path.Combine(userDataDir, "modPrefs.json")))
-                    {
-                        _prefList = new List<Pref>();
-                        File.WriteAllText(Path.Combine(userDataDir, "modPrefs.json"), JsonConvert.SerializeObject(_prefList, Formatting.Indented));
-                    }
-                    var input = File.ReadAllText(Path.Combine(userDataDir, "modPrefs.json"));
-                    _prefList = JsonConvert.DeserializeObject<List<Pref>>(input);
-                }
-                else if (_prefList == null && UnityEngine.Application.platform == UnityEngine.RuntimePlatform.Android)
-                {
-                    string userDataDir = "/sdcard/VRCTools/UserData";
+                    string userDataDir = "";
+                    if (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.WindowsPlayer)
+                        userDataDir = Path.Combine(Environment.CurrentDirectory, "UserData");
+                    else if (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.Android)
+                        userDataDir = "/sdcard/VRCTools/UserData";
                     if (!Directory.Exists(userDataDir)) Directory.CreateDirectory(userDataDir);
                     if (!File.Exists(Path.Combine(userDataDir, "modPrefs.json")))
                     {
@@ -58,15 +50,11 @@ namespace VRCModLoader
         {
             string FilePath = "";
             if (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.WindowsPlayer)
-            {
-               FilePath = Path.Combine(Environment.CurrentDirectory, "UserData");
-                if (!Directory.Exists(FilePath)) Directory.CreateDirectory(FilePath);
-            }
+                FilePath = Path.Combine(Environment.CurrentDirectory, "UserData");
             else if (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.Android)
-            {
                 FilePath = "/sdcard/VRCTools/UserData";
-                if (!Directory.Exists(FilePath)) Directory.CreateDirectory(FilePath);
-            }
+            if (!Directory.Exists(FilePath)) Directory.CreateDirectory(FilePath);
+
             FilePath = Path.Combine(FilePath, "modPrefs.json");
             FileInfo jsonFileInfo = new FileInfo(FilePath);
             FileStream jsonFileStream = null;
