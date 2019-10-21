@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Runtime.InteropServices;
+using System;
 using System.IO;
-using System.Text;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace Windows
@@ -20,6 +18,14 @@ namespace Windows
         [DllImport("kernel32.dll")]
         private static extern IntPtr GetConsoleWindow();
 
+        [DllImport("user32.dll", EntryPoint = "SetWindowText")]
+        public static extern bool SetWindowText(IntPtr hwnd, String lpString);
+
+        [DllImport("user32.dll", EntryPoint = "FindWindow")]
+        public static extern IntPtr FindWindow(string className, string windowName);
+
+        public static string Title = $"{Application.productName} v{Application.version} on {Enum.GetName(typeof(RuntimePlatform), Application.platform).Replace("Player", "")} [VRCModloader]";
+
         private static void ShowConsole()
         {
             SetForegroundWindow(GetConsoleWindow());
@@ -31,7 +37,7 @@ namespace Windows
             Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });
             Console.SetIn(new StreamReader(Console.OpenStandardInput()));
             // Console.Clear(); Maybe something else wrote to Console before.
-            Console.Title = $"{Application.productName} v{Application.version} on {Enum.GetName(typeof(RuntimePlatform), Application.platform).Replace("Player", "")} [VRCModloader]";
+            Console.Title = Title;
             ShowConsole();
         }
     }
